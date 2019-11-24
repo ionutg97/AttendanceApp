@@ -45,6 +45,7 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 
+
 		<!-- MySQL JDBC driver -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -55,7 +56,15 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
+			<version>5.2.1.RELEASE</version>
 		</dependency>
+
+		<!--flyway JDBC -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>6.0.8</version>
+        </dependency>
 
 	</dependencies>
 

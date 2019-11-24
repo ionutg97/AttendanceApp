@@ -1,5 +1,5 @@
 #my files ignored
-./Attendance-Backend/src/main/java/com/psbd/Attendance/model/*
+
 
 # User-specific stuff
 .idea
