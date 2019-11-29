@@ -13,9 +13,13 @@ public class StudentRef {
     private Long studentId;
     private Long attendaceItemId;
 
-    public StudentRef(Long studentId)
-    {
-        this.studentId=studentId;
+    public StudentRef(Long studentId) {
+        this.studentId = studentId;
+    }
+
+    public StudentRef(Long studentId, Long attendaceItemId) {
+        this.studentId = studentId;
+        this.attendaceItemId = attendaceItemId;
     }
 
 

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 public class StudentService {
 
     @Autowired
-    JdbcStudentRepository jdbcStudentRepository;
+    private JdbcStudentRepository jdbcStudentRepository;
 
-    public void test(){
+    public void test() {
         jdbcStudentRepository.createTableTest();
     }
 }

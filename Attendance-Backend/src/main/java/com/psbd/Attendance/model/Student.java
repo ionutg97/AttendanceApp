@@ -2,8 +2,6 @@ package com.psbd.Attendance.model;
 
 import lombok.*;
 
-import java.util.Set;
-
 @EqualsAndHashCode
 @Builder
 @AllArgsConstructor

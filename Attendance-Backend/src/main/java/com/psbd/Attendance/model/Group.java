@@ -13,10 +13,9 @@ import java.util.Set;
 public class Group {
     private Long id;
     private String name;
-    private Set<Student> students=new HashSet<Student>();
+    private Set<Student> students = new HashSet<Student>();
 
-    public void addStudent(Student student)
-    {
+    public void addStudent(Student student) {
         this.students.add(student);
     }
 }

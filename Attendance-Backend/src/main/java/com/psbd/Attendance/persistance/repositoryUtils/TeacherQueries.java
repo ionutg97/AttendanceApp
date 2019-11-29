@@ -5,7 +5,7 @@ public class TeacherQueries {
     public static String INSERT_TEACHER = "insert into teachers " +
             "(" +
             "name_teacher" +
-            ") "+
+            ") " +
 
             "values " +
             "(" +

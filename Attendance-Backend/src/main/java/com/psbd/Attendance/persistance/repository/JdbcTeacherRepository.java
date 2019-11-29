@@ -1,20 +1,19 @@
 package com.psbd.Attendance.persistance.repository;
 
-import com.psbd.Attendance.model.Classroom;
 import com.psbd.Attendance.model.Teacher;
-import com.psbd.Attendance.persistance.repositoryUtils.ClassroomQueries;
 import com.psbd.Attendance.persistance.repositoryUtils.TeacherQueries;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,27 +21,47 @@ import java.util.Optional;
 @Slf4j
 public class JdbcTeacherRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private KeyHolder keyHolder;
+    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Autowired
-    public JdbcTeacherRepository(JdbcTemplate jdbcTemplate,
-                                 NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                 KeyHolder keyHolder) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.keyHolder=keyHolder;
+    private SimpleJdbcCall simpleJdbcCall;
+
+    // init SimpleJdbcCall
+    @PostConstruct
+    void init() {
+        // o_name and O_NAME, same
+        jdbcTemplate.setResultsMapCaseInsensitive(true);
+
+        simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("pack_teachers")
+                .withProcedureName("add_teacher");
+
     }
 
-    public Teacher save(Teacher teacher) {
-        log.info("Saving teacher ");
-        SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", teacher.getName());
-        namedParameterJdbcTemplate.update(TeacherQueries.INSERT_TEACHER, parameters, keyHolder);
-        List<Map<String, Object>> keyList = keyHolder.getKeyList();
-        Long id = (Long) keyList.get(0).get("id");
-        teacher.setId(id);
+
+    @Autowired
+    public JdbcTeacherRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+
+    //jdbc query
+//    public Teacher save(Teacher teacher) {
+//        log.info("Saving teacher ");
+//        SqlParameterSource parameters = new MapSqlParameterSource()
+//                .addValue("name", teacher.getName());
+//        namedParameterJdbcTemplate.update(TeacherQueries.INSERT_TEACHER, parameters, keyHolder);
+//        List<Map<String, Object>> keyList = keyHolder.getKeyList();
+//        Long id = (Long) keyList.get(0).get("id");
+//        teacher.setId(id);
+//        return teacher;
+//    }
+
+    //jdbc call procedure
+    public Teacher save1(Teacher teacher) {
+            SqlParameterSource in = new MapSqlParameterSource().addValue("v_name", teacher.getName());
+        Map<String, Object> out = simpleJdbcCall.execute(in);
         return teacher;
     }
 

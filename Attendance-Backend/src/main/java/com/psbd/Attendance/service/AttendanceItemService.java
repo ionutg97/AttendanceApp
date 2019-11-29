@@ -13,20 +13,18 @@ public class AttendanceItemService {
     @Autowired
     private JdbcAttendanceItemRepository attendanceItemRepository;
 
-    public void saveNewAttendanceItem(AttendanceItem attendanceItem){
-        attendanceItemRepository.save(attendanceItem);
-    }
-
-    public void addNewStudentOnAttendanceItem(AttendanceItem attendanceItem, Student student)
-    {
-        attendanceItemRepository.saveNewStudent(this.findById(attendanceItem.getId()),student);
-    }
-
-    public AttendanceItem findById(Long attendanceItemId)
-    {
-       return attendanceItemRepository
-                .findById(attendanceItemId)
-                .orElseThrow(() -> new ResourceNotFoundException(AttendanceItem.class.getSimpleName(), attendanceItemId));
-    }
+//    public void saveNewAttendanceItem(AttendanceItem attendanceItem) {
+//        attendanceItemRepository.save(attendanceItem);
+//    }
+//
+//    public void addNewStudentOnAttendanceItem(AttendanceItem attendanceItem, Student student) {
+//        //  attendanceItemRepository.saveNewStudent(this.findById(attendanceItem.getId()),student);
+//    }
+//
+//    public AttendanceItem findById(Long attendanceItemId) {
+//        return attendanceItemRepository
+//                .findById(attendanceItemId)
+//                .orElseThrow(() -> new ResourceNotFoundException(AttendanceItem.class.getSimpleName(), attendanceItemId));
+//    }
 
 }
