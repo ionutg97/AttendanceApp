@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
+import React from 'react';
 import { bindActionCreators } from "redux";
 
 import {ButtonContainer} from '../../../Entities/containers/CreateStudent/CreateStudentStyleComp'; 
@@ -7,13 +7,27 @@ import Button from '../../../Entities/components/Button';
 import TextInput from '../../../Entities/components/TextInput';
 import TextSelect from '../../../Entities/components/TextSelect';
 
-function AddNewAttendance({ }) {
+import {CancelAdd} from '../../actions/Actions';
 
+export class AddNewAttendance extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            week: "",
+            category: ""
+        };
+    }
+
+    displayFindAttendance = () => {
+        this.props.CancelAdd();    
+    }
+
+    render() {
     return(
         <div>
             <TextInput
             label="Attendance Name"
-            value="List number 4"
+            value={this.props.name}
             disabled={true}>
             </TextInput>
             <TextInput
@@ -24,16 +38,23 @@ function AddNewAttendance({ }) {
             </TextSelect>
             <ButtonContainer>
                 <Button>Save</Button>
-                <Button>Cancel</Button>
+                <Button
+                onClick={this.displayFindAttendance}>Cancel</Button>
             </ButtonContainer>
         </div>
     );
+    }
 
 }
-const mapDispatchToProps = dispatch => ({
-    ...bindActionCreators(
-      {  }
-    )
-  });
+function mapDispatchToProps(dispatch) {
+    return {
+      dispatch,
+      ...bindActionCreators({ CancelAdd }, dispatch)
+    }
+  }
+
+  const mapStateToProps = state => ({
+    name: state.attendance.attendanceReducer.name
+});
   
-  export default connect(null, { mapDispatchToProps })(AddNewAttendance);
+  export default connect(mapStateToProps, mapDispatchToProps)(AddNewAttendance);

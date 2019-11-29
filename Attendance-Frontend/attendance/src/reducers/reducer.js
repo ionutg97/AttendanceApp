@@ -1,8 +1,8 @@
-// import {combineReducers} from 'redux'
+import {combineReducers} from 'redux'
 
 // import entitiesReducer from '../modules/Entities/reducers/entitiesReducer';
+import attendanceReducer from '../modules/Attendance/reducer/attendanceReducer';
 
+const reducer = combineReducers({attendance: attendanceReducer});
 
-// const reducer = combineReducers({entities: entitiesReducer});
-
-// export default reducer;
+export default reducer;

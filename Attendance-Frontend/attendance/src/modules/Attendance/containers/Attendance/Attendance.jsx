@@ -1,24 +1,28 @@
-import React, { Component }  from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import FindAttedanceList from '../AddNewAttendance/FindAttendanceList';
 import AddNewAttendance from '../AddNewAttendance/AddNewAttendance';
 
-import {FindAttendanceContainer,AddNewAttendanceContainer} from './AttendanceStyleComp';
+import { FindAttendanceContainer, AddNewAttendanceContainer } from './AttendanceStyleComp';
 
 export class Attedance extends Component {
     constructor(props) {
         super(props);
     }
 
-    render(){
+    render() {
         return (
+            
             <div>
-                <FindAttendanceContainer>
-                    <FindAttedanceList>   
+                <FindAttendanceContainer
+                    displayed={this.props.displayFind}>
+                    <FindAttedanceList>
                     </FindAttedanceList>
                 </FindAttendanceContainer>
-                <AddNewAttendanceContainer>
-                    <AddNewAttendance>    
+                <AddNewAttendanceContainer
+                    displayed={this.props.displayAdd}>
+                    <AddNewAttendance>
                     </AddNewAttendance>
                 </AddNewAttendanceContainer>
 
@@ -27,4 +31,9 @@ export class Attedance extends Component {
     }
 }
 
-export default Attedance;
+const mapStateToProps = state => ({
+    displayFind: state.attendance.attendanceReducer.displayFind,
+    displayAdd: state.attendance.attendanceReducer.displayAdd
+});
+
+export default connect(mapStateToProps,null)(Attedance);

@@ -21,7 +21,7 @@ const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 //const store = createStore(reducer, enhancer);
 
-const store =createStore(enhancer);
+const store =createStore(reducer,enhancer);
 
 ReactDOM.render(
     <BrowserRouter>

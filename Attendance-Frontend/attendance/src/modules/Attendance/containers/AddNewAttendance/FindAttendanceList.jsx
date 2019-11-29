@@ -15,7 +15,7 @@ export class FindAttendaceList extends React.Component {
         super(props);
         this.state = {
             week: "",
-            type: ""
+            category: ""
         };
     }
 
@@ -26,11 +26,10 @@ export class FindAttendaceList extends React.Component {
     };
 
     onChangeWeek = event => this.onChange("week", event.target.value);
-    onChangeType = event => this.onChange("type", event.target.value);
+    onChangeCategory= event => this.onChange("category", event.target.value);
 
-    find = () => {
-        console.log("here");
-        this.props.findAttedance(this.state.week, this.state.type)
+    findAttendanceName = () => {
+        this.props.findAttedance(this.state.week, this.state.category);    
     }
 
     render() {
@@ -42,12 +41,12 @@ export class FindAttendaceList extends React.Component {
                 >
                 </TextInput>
                 <TextSelect
-                    label="Type"
-                    onChange={this.onChangeType}>
+                    label="Category"
+                    onChange={this.onChangeCategory}>
                 </TextSelect>
                 <ButtonContainer>
                     <Button
-                        onClick={this.find}
+                        onClick={this.findAttendanceName}
                     >Search List</Button>
                 </ButtonContainer>
             </div>
@@ -55,10 +54,13 @@ export class FindAttendaceList extends React.Component {
     }
 
 }
-const mapDispatchToProps = dispatch => ({
-    ...bindActionCreators(
-        { findAttedance }, dispatch
-    )
-});
 
-export default connect(null, { mapDispatchToProps })(FindAttendaceList);
+function mapDispatchToProps(dispatch) {
+    return {
+      dispatch,
+      ...bindActionCreators({ findAttedance }, dispatch)
+    }
+  }
+
+
+ export default connect(null,  mapDispatchToProps )(FindAttendaceList);
