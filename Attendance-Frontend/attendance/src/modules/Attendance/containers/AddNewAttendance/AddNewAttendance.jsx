@@ -34,7 +34,8 @@ export class AddNewAttendance extends React.Component {
             label="Student Name">
             </TextInput>
             <TextSelect
-            label="Select Group"> 
+            label="Select Group"
+            items={["seminary seminary"]}> 
             </TextSelect>
             <ButtonContainer>
                 <Button>Save</Button>

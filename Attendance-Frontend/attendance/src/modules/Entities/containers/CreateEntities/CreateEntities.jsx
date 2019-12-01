@@ -8,6 +8,8 @@ import CreateAttendanceList from '../CreateAttendanceList/CreateAttendanceList';
 
 import {GeneralContainer, InputContainer} from './CreateEntitiesStyleCom'; 
 
+
+
 export class CreateEntities extends Component {
     constructor(props) {
         super(props);
@@ -38,4 +40,4 @@ export class CreateEntities extends Component {
     }
 }
 
-export default CreateEntities;
+ export default CreateEntities;

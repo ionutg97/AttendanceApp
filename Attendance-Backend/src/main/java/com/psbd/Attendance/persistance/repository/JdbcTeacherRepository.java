@@ -35,7 +35,6 @@ public class JdbcTeacherRepository {
         simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_teachers")
                 .withProcedureName("add_teacher");
-
     }
 
 
@@ -59,7 +58,7 @@ public class JdbcTeacherRepository {
 //    }
 
     //jdbc call procedure
-    public Teacher save1(Teacher teacher) {
+    public Teacher save(Teacher teacher) {
             SqlParameterSource in = new MapSqlParameterSource().addValue("v_name", teacher.getName());
         Map<String, Object> out = simpleJdbcCall.execute(in);
         return teacher;

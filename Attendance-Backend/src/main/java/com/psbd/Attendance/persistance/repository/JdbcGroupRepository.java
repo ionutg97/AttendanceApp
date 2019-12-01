@@ -1,8 +1,7 @@
 package com.psbd.Attendance.persistance.repository;
 
+import com.psbd.Attendance.model.Group;
 import com.psbd.Attendance.model.Student;
-import com.psbd.Attendance.model.Teacher;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,9 +14,7 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @Repository
-@Slf4j
-public class JdbcStudentRepository {
-
+public class JdbcGroupRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -31,11 +28,11 @@ public class JdbcStudentRepository {
         jdbcTemplate.setResultsMapCaseInsensitive(true);
 
         simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("pack_students")
-                .withProcedureName("add_student");
+                .withCatalogName("pack_groups")
+                .withProcedureName("add_group");
     }
     @Autowired
-    public JdbcStudentRepository(JdbcTemplate jdbcTemplate,
+    public JdbcGroupRepository(JdbcTemplate jdbcTemplate,
                                  NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -56,14 +53,16 @@ public class JdbcStudentRepository {
 //        return student;
 //    }
 
-    public Student save(Student student) {
+    public Group save(Group group) {
         SqlParameterSource in = new MapSqlParameterSource()
-                .addValue("v_name", student.getName())
-                .addValue("v_identity_number",student.getIdentityNumber())
-                .addValue("v_id_group", student.getGroup().getId());
+                .addValue("v_name", group.getName());
         Map<String, Object> out = simpleJdbcCall.execute(in);
-        return student;
+        return group;
+    }
+
+    public Group findByName(String name)
+    {
+        return null;
     }
 
 }
-

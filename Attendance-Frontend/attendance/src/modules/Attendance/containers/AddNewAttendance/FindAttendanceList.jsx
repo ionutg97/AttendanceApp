@@ -42,7 +42,8 @@ export class FindAttendaceList extends React.Component {
                 </TextInput>
                 <TextSelect
                     label="Category"
-                    onChange={this.onChangeCategory}>
+                    onChange={this.onChangeCategory}
+                    items={["seminary seminary"]}>
                 </TextSelect>
                 <ButtonContainer>
                     <Button

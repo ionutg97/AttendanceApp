@@ -17,6 +17,6 @@ public class TeacherService {
     }
 
     public Teacher save(Teacher teacher) {
-        return jdbcTeacherRepository.save1(teacher);
+        return jdbcTeacherRepository.save(teacher);
     }
 }

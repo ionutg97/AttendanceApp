@@ -34,11 +34,26 @@ const StyledSelectInput = styled.select.attrs(props => ({
     }
 `;
 
+// const GenerateOptionValueInput = props => {
+//     const {  ...other } = props;
+//     console.log(...other);
+//     return  <OptionValueInput value={...other}></OptionValueInput>;
+//   };
+
 export class TextSelect extends React.Component {
 
     isInputValid = () => {
         return this.props.error === null || this.props.error === "";
     }
+
+    // items = this.props.data["items"].map(function(itemData) {
+    //     var component = Components[itemData['itemClass']];
+    //     return React.createElement(component, {
+    //         data: itemData,
+    //         key: itemData['id']
+    //     });
+    // });
+
 
     render() {
         return (
@@ -51,12 +66,7 @@ export class TextSelect extends React.Component {
                     isValid={this.isInputValid()}
                     onClick={this.props.onClick}
                 >
-                    <OptionValueInput value="none">--Please choose an option--</OptionValueInput>
-                    <OptionValueInput value="1410A">1410A</OptionValueInput>
-                    <OptionValueInput value="1310A">1310A</OptionValueInput>
-                    <OptionValueInput value="1210A">1210A</OptionValueInput>
-                    <OptionValueInput value="1110A">1110A</OptionValueInput>
-                    <OptionValueInput value="1111A">1111A</OptionValueInput>
+                    {this.props.items.map((message) => <OptionValueInput value={message} >{message}</OptionValueInput>)}
 
                 </StyledSelectInput>
                 <StyledError>{this.props.error} </StyledError>
