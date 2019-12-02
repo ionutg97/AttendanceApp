@@ -1,21 +1,7 @@
 package com.psbd.Attendance.persistance.mapper;
 
-import com.psbd.Attendance.exception.ResourceNotFoundException;
-import com.psbd.Attendance.model.AttendanceItem;
-import com.psbd.Attendance.model.AttendanceList;
-import com.psbd.Attendance.model.Classroom;
-import com.psbd.Attendance.model.Teacher;
-import com.psbd.Attendance.persistance.repository.JdbcAttendanceListRepository;
-import com.psbd.Attendance.persistance.repository.JdbcClassroomRepository;
-import com.psbd.Attendance.persistance.repository.JdbcStudentRepository;
-import com.psbd.Attendance.persistance.repository.JdbcTeacherRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 @Slf4j
 @Service

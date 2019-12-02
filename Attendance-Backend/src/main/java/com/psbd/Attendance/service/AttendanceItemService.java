@@ -1,8 +1,5 @@
 package com.psbd.Attendance.service;
 
-import com.psbd.Attendance.exception.ResourceNotFoundException;
-import com.psbd.Attendance.model.AttendanceItem;
-import com.psbd.Attendance.model.Student;
 import com.psbd.Attendance.persistance.repository.JdbcAttendanceItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

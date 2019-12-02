@@ -1,16 +1,10 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-//import { withRouter } from "react-router-dom";
-//import { connect } from "react-redux";
-//import { bindActionCreators } from "redux";
 
-import { StyledNavigation, StyledNavigationMenu, NavActions, } from "./Navigation.style.jsx";
+
+import { StyledNavigation, StyledNavigationMenu } from "./Navigation.style.jsx";
 
 class Navigation extends Component {
-    constructor(props) {
-        super(props);
-
-    }
 
     render() {
         return (

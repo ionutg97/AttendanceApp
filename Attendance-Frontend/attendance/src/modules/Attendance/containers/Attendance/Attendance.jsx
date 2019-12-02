@@ -7,10 +7,6 @@ import AddNewAttendance from '../AddNewAttendance/AddNewAttendance';
 import { FindAttendanceContainer, AddNewAttendanceContainer } from './AttendanceStyleComp';
 
 export class Attedance extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             

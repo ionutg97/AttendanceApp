@@ -1,24 +1,28 @@
-// import { combineReducers } from "redux";
+import { combineReducers } from "redux";
 
 
-// const initialEntitiesState = {
-//     name: null
-//   };
+const initialEntitiesState = {
+    groups: []
+};
 
-//   const createStudentReducer = (state = initialEntitiesState, action) => {
-//     switch (action.type) {
-//       case "SET_NAME": {
-//         return {
-//           ...state,
-//          name: "Ionut"
-//         };
-//       }
-//     }
-// }
-  
+const createStudentReducer = (state = initialEntitiesState, action) => {
+    switch (action.type) {
+        case "LOAD_GROUPS": {
+            return {
+                ...state,
+                groups: action.payload.groups
+            }
+        }
+        default: {
+            return state;
 
-//   const entitiesReducer = combineReducers({
-//     createStudent:createStudentReducer
-//   });
+        }
+    }
+}
 
-//   export default entitiesReducer;
+
+const entitiesReducer = combineReducers({
+    entitiesReducer: createStudentReducer
+});
+
+export default entitiesReducer;

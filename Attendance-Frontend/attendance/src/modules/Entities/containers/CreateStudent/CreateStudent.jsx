@@ -21,7 +21,8 @@ export class CreateStudent extends React.Component {
         name: "",
         identityNumber: ""
       },
-      backgroundSaveBtn: "#FF8F74"
+      backgroundSaveBtn: "#FF8F74",
+      group:""
     }
   }
   onChange = (fieldName, value) => {
@@ -36,6 +37,9 @@ export class CreateStudent extends React.Component {
   }
   onChangeIdentityNumber = event => {
     this.onChange("identityNumber", event.target.value);
+  }
+  onChangeGroup= event => {
+    this.onChange("group", event.target.value);
   }
 
   activateSaveButton = () => {
@@ -98,6 +102,15 @@ export class CreateStudent extends React.Component {
     }
   }
 
+  saveDateStudent = () => {
+    if (this.state.errors.name === null && this.state.errors.identityNumber === null
+        && this.state.name !== null && this.state.identityNumber !== null) {
+        this.props.saveStudent(this.state.name,this.state.identityNumber,this.state.group);
+        this.clearValue();
+    }
+
+}
+
   clearValue = () => {
     const { name, identityNumber,backgroundSaveBtn } = this.state;
     this.setState({
@@ -129,12 +142,13 @@ export class CreateStudent extends React.Component {
         <TextSelect
           error={null}
           label="Group"
-          items={["1408A"]}>
+          onBlur={this.onChangeGroup}
+          items={this.props.groupsList}>
         </TextSelect>
         <ButtonContainer>
           <Button
           background={this.state.backgroundSaveBtn}
-          onClick={this.saveDateAttendance}
+          onClick={this.saveDateStudent}
           >
             Save Student
             
@@ -161,4 +175,8 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null,  mapDispatchToProps )(CreateStudent);
+const mapStateToProps = state => ({
+  groupsList: state.entities.entitiesReducer.groups
+})
+
+export default connect(mapStateToProps,  mapDispatchToProps )(CreateStudent);

@@ -1,23 +1,7 @@
 package com.psbd.Attendance.persistance.repository;
 
-import com.psbd.Attendance.model.AttendanceItem;
-import com.psbd.Attendance.persistance.mapper.AttendanceItemRowMapper;
-import com.psbd.Attendance.persistance.repositoryUtils.AttendanceItemQueries;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static com.psbd.Attendance.persistance.repositoryUtils.AttendanceItemQueries.INSERT_ATTENDANCE_ITEM;
 
 @Repository
 @Slf4j

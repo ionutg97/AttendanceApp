@@ -43,6 +43,7 @@ export const saveResource = (path, nameValue) => {
 };
 
 export const saveStudent = (nameValue, identityN, groupName) => {
+    console.log(groupName);
     return dispatch => {
 
         fetch(`http://localhost:8090/students`, {
@@ -87,6 +88,29 @@ export const saveAttendanceList = (nameValue, week, type, groupName) => {
         }).then(response => {
             console.log(response.json())
 
+        })
+            .catch(err => {
+                console.log(err);
+
+            });
+    };
+}
+
+export const getAllGroups = () => {
+    return dispatch => {
+        fetch(`http://localhost:8090/groups/all`, {
+            method: 'get'
+        }).then(response => {
+            return response.json();
+
+        }).then (data => {
+            dispatch({
+                type: "LOAD_GROUPS",
+                payload: {
+                  groups: data
+                }
+              });
+        
         })
             .catch(err => {
                 console.log(err);

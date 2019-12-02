@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
+import React from 'react';
 import { bindActionCreators } from "redux";
 
 import { ButtonContainer } from '../CreateStudent/CreateStudentStyleComp';
@@ -33,13 +33,14 @@ export class CreateClassroom extends React.Component {
     }
 
     verifyInputName = (value) => {
-        const { errors } = this.state
+        const { errors, backgroundSaveBtn } = this.state
         if (this.state.name === null || this.state.name === "") {
             this.setState({
                 errors: {
                     ...errors,
-                    name: "Field classroom name is required"
-                }
+                    name: "Field classroom name is required",
+
+                }, backgroundSaveBtn: "#FF8F74"
             });
 
         }
@@ -48,7 +49,8 @@ export class CreateClassroom extends React.Component {
                 errors: {
                     ...errors,
                     name: null
-                }
+                },
+                backgroundSaveBtn: "#32CD32"
             });
 
         }
@@ -60,14 +62,14 @@ export class CreateClassroom extends React.Component {
             this.props.saveResource("classrooms", this.state.name);
             this.clearValue();
         }
-
     }
 
     clearValue = () => {
-        const { name, identityNumber } = this.state;
+        const { name, identityNumber,backgroundSaveBtn } = this.state;
         this.setState({
             identityNumber: "",
-            name: ""
+            name: "",
+            backgroundSaveBtn: "#FF8F74"
         });
     }
     render() {
@@ -82,6 +84,7 @@ export class CreateClassroom extends React.Component {
                 </TextInput>
                 <ButtonContainer>
                     <Button
+                        background={this.state.backgroundSaveBtn}
                         onClick={this.saveDateClassroom}
                     >
                         Save Classroom
@@ -105,4 +108,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-    export default connect(null, mapDispatchToProps)(CreateClassroom);
+export default connect(null, mapDispatchToProps)(CreateClassroom);

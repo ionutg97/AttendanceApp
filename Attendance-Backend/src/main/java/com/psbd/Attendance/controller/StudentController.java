@@ -1,7 +1,6 @@
 package com.psbd.Attendance.controller;
 
 import com.psbd.Attendance.model.Student;
-import com.psbd.Attendance.model.Teacher;
 import com.psbd.Attendance.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

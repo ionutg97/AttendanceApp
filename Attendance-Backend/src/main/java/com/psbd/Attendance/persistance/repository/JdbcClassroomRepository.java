@@ -1,7 +1,6 @@
 package com.psbd.Attendance.persistance.repository;
 
 import com.psbd.Attendance.model.Classroom;
-import com.psbd.Attendance.model.Group;
 import com.psbd.Attendance.persistance.repositoryUtils.ClassroomQueries;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

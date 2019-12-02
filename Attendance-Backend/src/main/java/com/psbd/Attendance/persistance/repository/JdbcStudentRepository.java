@@ -1,7 +1,6 @@
 package com.psbd.Attendance.persistance.repository;
 
 import com.psbd.Attendance.model.Student;
-import com.psbd.Attendance.model.Teacher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,8 +58,8 @@ public class JdbcStudentRepository {
     public Student save(Student student) {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_name", student.getName())
-                .addValue("v_identity_number",student.getIdentityNumber())
-                .addValue("v_id_group", student.getGroup().getId());
+                .addValue("v_indentity_number",student.getIdentityNumber())
+                .addValue("v_group_name", student.getGroup().getName());
         Map<String, Object> out = simpleJdbcCall.execute(in);
         return student;
     }

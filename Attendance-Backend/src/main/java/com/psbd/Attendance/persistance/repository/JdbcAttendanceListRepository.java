@@ -5,7 +5,6 @@ import com.psbd.Attendance.model.Category;
 import com.psbd.Attendance.persistance.repositoryUtils.AttendanceListQueries;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScans;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

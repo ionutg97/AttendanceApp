@@ -166,7 +166,7 @@ export class CreateAttendanceList extends React.Component {
                     error={null}
                     onChange={this.onChangeGroups}
                     value={this.state.groups}
-                    items={["1021A","1408A"]}>
+                    items={this.props.groupsList}>
                 </TextSelect>
                 <ButtonContainer>
                     <Button
@@ -195,4 +195,8 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CreateAttendanceList);
+const mapStateToProps = state => ({
+    groupsList: state.entities.entitiesReducer.groups
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAttendanceList);

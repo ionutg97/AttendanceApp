@@ -1,7 +1,8 @@
 package com.psbd.Attendance.persistance.repository;
 
 import com.psbd.Attendance.model.Group;
-import com.psbd.Attendance.model.Student;
+import com.psbd.Attendance.persistance.mapper.GroupRowMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,16 +12,20 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.Map;
+import java.util.*;
 
 @Repository
+@Slf4j
 public class JdbcGroupRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private SimpleJdbcCall simpleJdbcCall;
+    private SimpleJdbcCall simpleJdbcFunctionGetAll;
 
+    @Autowired
+    GroupRowMapper  groupRowMapper;
     // init SimpleJdbcCall
     @PostConstruct
     void init() {
@@ -30,6 +35,10 @@ public class JdbcGroupRepository {
         simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_groups")
                 .withProcedureName("add_group");
+
+        simpleJdbcFunctionGetAll = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("pack_groups")
+                .withFunctionName("get_allGroups").returningResultSet("out_groups",groupRowMapper);;
     }
     @Autowired
     public JdbcGroupRepository(JdbcTemplate jdbcTemplate,
@@ -65,4 +74,11 @@ public class JdbcGroupRepository {
         return null;
     }
 
+    public Optional<List<Group>> findAll(){
+        log.info("get all Groups");
+        Set<Group> groups=new TreeSet<Group>();
+        Map out=  simpleJdbcFunctionGetAll.execute();
+        ArrayList<Group> arrayGroups = (ArrayList<Group>) out.get("out_groups");
+        return Optional.of(arrayGroups);
+    }
 }

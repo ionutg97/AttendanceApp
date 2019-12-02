@@ -1,21 +1,31 @@
 package com.psbd.Attendance.model;
 
-import lombok.*;
-
-import java.util.HashSet;
-import java.util.Set;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode
 @Builder
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Group {
     private Long id;
     private String name;
-    private Set<Student> students = new HashSet<Student>();
+    //private Set<Student> students = new HashSet<Student>();
 
-    public void addStudent(Student student) {
-        this.students.add(student);
+    public Group(String name)
+    {
+        this.name=name;
     }
+
+    public Group(Long id, String name)
+    {
+        this.id=id;
+        this.name=name;
+    }
+   // public void addStudent(Student student) {
+     //   this.students.add(student);
+    //}
 }

@@ -1,4 +1,6 @@
-import React, { Component }  from 'react';
+import { connect } from 'react-redux';
+import React from 'react';
+import { bindActionCreators } from "redux";
 
 import CreateStudent from '../CreateStudent/CreateStudent';
 import CreateClassroom from '../CreateClassroom/CreateClassroom';
@@ -8,11 +10,15 @@ import CreateAttendanceList from '../CreateAttendanceList/CreateAttendanceList';
 
 import {GeneralContainer, InputContainer} from './CreateEntitiesStyleCom'; 
 
+import {getAllGroups} from '../../actions/Actions';
 
-
-export class CreateEntities extends Component {
+export class CreateEntities extends React.Component {
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount(){
+        this.props.getAllGroups();
     }
 
     render(){
@@ -39,5 +45,10 @@ export class CreateEntities extends Component {
         );
     }
 }
-
- export default CreateEntities;
+const mapDispatchToProps = dispatch => {
+    return {
+        dispatch,
+        ...bindActionCreators({getAllGroups}, dispatch)
+    }
+}
+ export default connect(null,mapDispatchToProps) (CreateEntities);

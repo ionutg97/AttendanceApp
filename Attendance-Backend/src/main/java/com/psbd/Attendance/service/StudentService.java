@@ -1,6 +1,5 @@
 package com.psbd.Attendance.service;
 
-import com.psbd.Attendance.model.Group;
 import com.psbd.Attendance.model.Student;
 import com.psbd.Attendance.persistance.repository.JdbcGroupRepository;
 import com.psbd.Attendance.persistance.repository.JdbcStudentRepository;
@@ -17,8 +16,8 @@ public class StudentService {
     private JdbcGroupRepository jdbcGroupRepository;
 
     public Student save(Student student) {
-        Group group=jdbcGroupRepository.findByName(student.getGroup().getName());
-        student.setGroup(group);
+       // Group group=jdbcGroupRepository.findByName(student.getGroup().getName());
+        //student.setGroup(group);
         return jdbcStudentRepository.save(student);
     }
 }

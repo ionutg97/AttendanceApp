@@ -6,7 +6,7 @@ import { ButtonContainer } from '../CreateStudent/CreateStudentStyleComp';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
 
-import {saveResource} from '../../actions/Actions';
+import { saveResource } from '../../actions/Actions';
 
 export class CreateGroup extends React.Component {
     constructor(props) {
@@ -38,7 +38,7 @@ export class CreateGroup extends React.Component {
                 errors: {
                     ...errors,
                     name: "Field group name is required"
-                }
+                }, backgroundSaveBtn: "#FF8F74"
             });
 
         }
@@ -47,7 +47,7 @@ export class CreateGroup extends React.Component {
                 errors: {
                     ...errors,
                     name: null
-                }
+                }, backgroundSaveBtn: "#32CD32"
             });
 
         }
@@ -67,7 +67,8 @@ export class CreateGroup extends React.Component {
         const { name, identityNumber } = this.state;
         this.setState({
             identityNumber: "",
-            name: ""
+            name: "",
+            backgroundSaveBtn: "#FF8F74"
         });
     }
 
@@ -84,6 +85,7 @@ export class CreateGroup extends React.Component {
                 </TextInput>
                 <ButtonContainer>
                     <Button
+                        background={this.state.backgroundSaveBtn}
                         onClick={this.saveDateGroup}
                     >
                         Save Group
