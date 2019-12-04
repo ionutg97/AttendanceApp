@@ -1,57 +1,84 @@
-//import axios from "react-axios";
 
-// export const findAttedance = (week, type) => {
-//     return dispatch => {
-//         console.log(week, type)
-//         dispatch({
-//                 type: "FIND_ATTENDANCE",
-//                 payload: {
-//                     name:`List for ${week} ${type}`,
-//                     displayFind: false,
-//                     displayAdd: true,  
-//                 } 
-//               });
+export const findStudentsByGroup = (group) => {
+  return dispatch => {
+    fetch(`http://localhost:8090/students/all?group=${group}`, {
+      method: 'get'
+    }).then(response => {
+      return response.json();
 
-//       //   fetch.get(
-//       //   `http://localhost:8090/attendance?week=${week}&per-page=${type}`
-//       // )
-//       //   .then(response => {
-//       //     dispatch({
-//       //       type: "FIND_ATTENDANCE",
-//       //       payload: {
-//       //           value: response.data.attendacenName
-//       //       }
-//       //     });
-//       //   })
-//       //   .catch(err => {
-//       //     dispatch({
-//       //       type: "LOAD_ERROR",
-//       //       payload: {
-//       //         error: true
-//       //       }
-//       //     });
-//       //   });
-//     };
-//   };
+    }).then(data => {
+      dispatch({  
+        type: "FIND_ATTENDANCE",
+        payload: {
+          students: data,
+          displayFind: false,
+          displayAdd: true,
+        }
+      });
 
-export const findAttedance = (week, category) => {
-  return {
-    type: "FIND_ATTENDANCE",
-    payload: {
-      name: `List for ${week} ${category}`,
-      displayFind: false,
-      displayAdd: true,
-    }
+    })
+      .catch(err => {
+        console.log(err);
+
+      });
   };
-};
+}
+
+
 
 export const CancelAdd = () => {
   return {
     type: "FIND_ATTENDANCE",
     payload: {
-      name: "",
+      students: [],
       displayFind: true,
       displayAdd: false,
     }
   };
 };
+
+export const getAllLists = (week, type) => {
+  return dispatch => {
+    fetch(`http://localhost:8090/attendance_lists/all?week=${week}&type=${type.toLowerCase()}`, {
+      method: 'get'
+    }).then(response => {
+      return response.json();
+
+    }).then(data => {
+      dispatch({
+        type: "LOAD_LISTS",
+        payload: {
+          lists: data
+        }
+      });
+
+    })
+      .catch(err => {
+        console.log(err);
+
+      });
+  };
+}
+
+export const findGroup = (nameList, week, type) => {
+  return dispatch => {
+    fetch(`http://localhost:8090/attendance_lists/groups?name=${nameList}&week=${week}&type=${type.toLowerCase()}`, {
+      method: 'get'
+    }).then(response => {
+      return response.json();
+
+    }).then(data => {
+      dispatch({
+        type: "LOAD_GROUPS_LISTS",
+        payload: {
+          lists: data
+        }
+      });
+
+    })
+      .catch(err => {
+        console.log(err);
+
+      });
+  };
+}

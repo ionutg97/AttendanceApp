@@ -7,7 +7,7 @@ import Button from '../../../Entities/components/Button';
 import TextInput from '../../../Entities/components/TextInput';
 import TextSelect from '../../../Entities/components/TextSelect';
 
-import { findAttedance } from '../../actions/Actions';
+import { findStudentsByGroup, getAllLists, findGroup } from '../../actions/Actions';
 
 export class FindAttendaceList extends React.Component {
 
@@ -15,7 +15,13 @@ export class FindAttendaceList extends React.Component {
         super(props);
         this.state = {
             week: "",
-            category: ""
+            category: "seminary",
+            errors: {
+                week: ""
+            },
+            nameList: "",
+            group: "",
+            backgroundSaveBtn: "#FF8F74"
         };
     }
 
@@ -26,10 +32,86 @@ export class FindAttendaceList extends React.Component {
     };
 
     onChangeWeek = event => this.onChange("week", event.target.value);
-    onChangeCategory= event => this.onChange("category", event.target.value);
+    onChangeCategory = event => this.onChange("category", event.target.value);
+    onSelectList = (event) => this.onChange("nameList", event.target.value);
+    onSelectGroup = (event) => this.onChange("group", event.target.value);
+    // onSelectList = (event) =>{
+    //     console.log("event", event);
+    //     return new Promise((resolve,reject)=>
+    //     {
+    //         console.log(this.state);
 
-    findAttendanceName = () => {
-        this.props.findAttedance(this.state.week, this.state.category);    
+    //         this.state.nameList=event.target.value;
+    //         console.log(this.state);
+    //         this.state.nameList ?
+    //         resolve():reject()
+    //     });
+    // };
+
+    // onSelectListPromise = new Promise((resolve)=>{
+    //     resolve(valueEvent)
+    // });
+
+    // onSelectListPromise.then()
+
+
+
+    verifyInputWeek = () => {
+        const { errors, backgroundSaveBtn } = this.state
+        if (this.state.week === null || this.state.week === "") {
+            this.setState({
+                errors: {
+                    ...errors,
+                    week: "Field week is required"
+                }, backgroundSaveBtn: "#FF8F74"
+            });
+        }
+        else
+            if (parseInt(this.state.week) < 0 || parseInt(this.state.week) > 15 || !parseInt(this.state.week)) {
+                this.setState({
+                    errors: {
+                        ...errors,
+                        week: "The week value must to be between 1 and 14"
+                    }, backgroundSaveBtn: "#FF8F74"
+                });
+            }
+            else {
+                this.setState({
+                    errors: {
+                        ...errors,
+                        week: null
+                    }, backgroundSaveBtn: "#32CD32"
+                });
+            }
+    }
+
+    addNewStudentOnAttendanceList = () => {
+        const { errors } = this.state
+        if (this.state.group !== "") {
+            this.props.findStudentsByGroup(this.state.group);
+            this.setState({
+                week: "",
+                backgroundSaveBtn: "#FF8F74",
+                nameList: [],
+                errors: {
+                    ...errors,
+                    week: ""
+                },
+                group: ""
+            });
+        }
+    }
+
+    findAllAttedanceName = () => {
+        this.props.getAllLists(this.state.week, this.state.category);
+    }
+
+    findGroupByName = () => {
+
+        if (this.state.nameList !== "") {
+            this.props.findGroup(this.state.nameList, this.state.week, this.state.category);
+        }
+
     }
 
     render() {
@@ -37,18 +119,47 @@ export class FindAttendaceList extends React.Component {
             <div>
                 <TextInput
                     label="Week"
+                    error={this.state.errors.week}
                     onChange={this.onChangeWeek}
+                    onBlur={this.verifyInputWeek}
+                    value={this.state.week}
                 >
                 </TextInput>
                 <TextSelect
                     label="Category"
+                    error={null}
                     onChange={this.onChangeCategory}
-                    items={["seminary seminary"]}>
+                    value={this.state.category}
+                    items={["seminary", "cours", "laboratory"]}
+                    height="2.5rem"
+                >
                 </TextSelect>
                 <ButtonContainer>
                     <Button
-                        onClick={this.findAttendanceName}
+                        background={this.state.backgroundSaveBtn}
+                        onClick={this.findAllAttedanceName}
                     >Search List</Button>
+                </ButtonContainer>
+                <TextSelect
+                    label="Attendance Lists"
+                    error={null}
+                    onChange={this.onSelectList}
+                    onBlur={this.findGroupByName}
+                    items={this.props.lists}
+                    height="2.5rem"
+                ></TextSelect>
+                <TextSelect
+                    label="Groups"
+                    error={null}
+                    items={this.props.groups}
+                    onChange={this.onSelectGroup}
+                    height="2.5rem"
+                ></TextSelect>
+                <ButtonContainer>
+                    <Button
+                        background={this.state.backgroundSaveBtn}
+                        onClick={this.addNewStudentOnAttendanceList}
+                    >Search student</Button>
                 </ButtonContainer>
             </div>
         );
@@ -58,10 +169,15 @@ export class FindAttendaceList extends React.Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-      dispatch,
-      ...bindActionCreators({ findAttedance }, dispatch)
+        dispatch,
+        ...bindActionCreators({ findStudentsByGroup, getAllLists, findGroup }, dispatch)
     }
-  }
+}
+
+const mapStateToProps = state => ({
+    lists: state.attendance.attendanceReducer.attendanceLists,
+    groups: state.attendance.attendanceReducer.groups
+});
 
 
- export default connect(null,  mapDispatchToProps )(FindAttendaceList);
+export default connect(mapStateToProps, mapDispatchToProps)(FindAttendaceList);

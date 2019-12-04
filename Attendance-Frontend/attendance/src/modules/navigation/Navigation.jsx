@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 import { NavLink } from "react-router-dom";
 
 
@@ -7,6 +8,7 @@ import { StyledNavigation, StyledNavigationMenu } from "./Navigation.style.jsx";
 class Navigation extends Component {
 
     render() {
+        //if(this.props.type==="admin")
         return (
             <StyledNavigation>
                 <StyledNavigationMenu>
@@ -23,7 +25,15 @@ class Navigation extends Component {
                 </StyledNavigationMenu>
             </StyledNavigation>
         );
+        // else
+        // return(
+        //     null
+        // );
+
     }
 }
-
-export default Navigation;
+const mapStateToProps = state => ({
+    type: state.login.login.type
+  })
+  
+export default connect (mapStateToProps,null)(Navigation);

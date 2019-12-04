@@ -17,8 +17,7 @@ const StyledSelectInput = styled.select.attrs(props => ({
 }))`
     border: ${props => props.isValid ? "1px solid #C7D0DA" : "1px solid red"};
     width:100%;
-  
-    height: 2.5rem;
+    height: ${props => props.height};
     font-size: 1rem;
     padding-left: 1rem;
     padding-right:1rem;
@@ -33,26 +32,13 @@ const StyledSelectInput = styled.select.attrs(props => ({
         outline: none;
     }
 `;
-
-// const GenerateOptionValueInput = props => {
-//     const {  ...other } = props;
-//     console.log(...other);
-//     return  <OptionValueInput value={...other}></OptionValueInput>;
-//   };
+ 
 
 export class TextSelect extends React.Component {
 
     isInputValid = () => {
         return this.props.error === null || this.props.error === "";
     }
-
-    // items = this.props.data["items"].map(function(itemData) {
-    //     var component = Components[itemData['itemClass']];
-    //     return React.createElement(component, {
-    //         data: itemData,
-    //         key: itemData['id']
-    //     });
-    // });
 
 
     render() {
@@ -65,6 +51,8 @@ export class TextSelect extends React.Component {
                     onBlur={this.props.onBlur}
                     isValid={this.isInputValid()}
                     onClick={this.props.onClick}
+                    multiple={this.props.multiple}
+                    height={this.props.height}
                 >
                     {this.props.items.map((message) => <OptionValueInput value={message} >{message}</OptionValueInput>)}
 

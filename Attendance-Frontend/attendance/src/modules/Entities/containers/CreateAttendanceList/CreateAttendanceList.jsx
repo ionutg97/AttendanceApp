@@ -17,10 +17,10 @@ export class CreateAttendanceList extends React.Component {
             week: "",
             errors: {
                 name: "",
-                week: ""
+                week: ""    
             },
             type: "",
-            groups: "",
+            groups: [],
             backgroundSaveBtn: "#FF8F74"
         }
     }
@@ -42,7 +42,13 @@ export class CreateAttendanceList extends React.Component {
         this.onChange("type", event.target.value);
     }
     onChangeGroups =event =>{
-        this.onChange("groups", event.target.value);
+        [...event.target.options]
+        .filter(o => o.selected)
+        .map(o => {
+            let value=o.value;
+            if(this.state.groups===null || this.state.groups.find(element => element === o.value)===undefined)
+                this.state.groups.push(o.value);
+        }) 
     }
 
     activateSaveButton = () => {
@@ -130,7 +136,7 @@ export class CreateAttendanceList extends React.Component {
             week: "",
             name: "",
             type:"",
-            groups: "",
+            groups: [],
             backgroundSaveBtn: "#FF8F74"
         });
     }
@@ -159,14 +165,18 @@ export class CreateAttendanceList extends React.Component {
                     error={null}
                     onChange={this.onChangeType}
                     value={this.state.type}
-                    items={["seminary","cours","laboratory"]}>
+                    items={["seminary","cours","laboratory"]}
+                    height="3rem">
                 </TextSelect>
                 <TextSelect
                     label="Group(s)"
                     error={null}
                     onChange={this.onChangeGroups}
                     value={this.state.groups}
-                    items={this.props.groupsList}>
+                    items={this.props.groupsList}
+                    multiple={"multiple"}
+                    height="5.5rem"
+                    >
                 </TextSelect>
                 <ButtonContainer>
                     <Button

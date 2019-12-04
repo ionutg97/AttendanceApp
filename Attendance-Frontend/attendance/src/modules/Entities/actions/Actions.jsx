@@ -1,8 +1,6 @@
 
 export const saveTeachers = (nameTeacher) => {
     return dispatch => {
-        console.log(nameTeacher);
-
         fetch('http://localhost:8090/teachers', {
             method: 'post',
             headers: {
@@ -23,7 +21,6 @@ export const saveTeachers = (nameTeacher) => {
 
 export const saveResource = (path, nameValue) => {
     return dispatch => {
-        console.log(path, nameValue);
         fetch(`http://localhost:8090/${path}`, {
             method: 'post',
             headers: {
@@ -43,7 +40,6 @@ export const saveResource = (path, nameValue) => {
 };
 
 export const saveStudent = (nameValue, identityN, groupName) => {
-    console.log(groupName);
     return dispatch => {
 
         fetch(`http://localhost:8090/students`, {
@@ -73,7 +69,8 @@ export const saveStudent = (nameValue, identityN, groupName) => {
 
 export const saveAttendanceList = (nameValue, week, type, groupName) => {
     return dispatch => {
-        console.log(nameValue,week,type.toUpperCase());
+        let groups= [...groupName].join(" ");
+
         fetch(`http://localhost:8090/attendance_lists`, {
             method: 'post',
             headers: {
@@ -82,8 +79,9 @@ export const saveAttendanceList = (nameValue, week, type, groupName) => {
             },
             body: JSON.stringify({
                 id: null,
-                name: `${nameValue} group ${groupName} week ${week}`,
-                category: type.toUpperCase()
+                name: `${nameValue} group ${groups} week ${week}`,
+                category: type.toUpperCase(),
+                week
             })
         }).then(response => {
             console.log(response.json())

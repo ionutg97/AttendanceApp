@@ -1,6 +1,8 @@
 package com.psbd.Attendance.persistance.repository;
 
+import com.psbd.Attendance.model.Group;
 import com.psbd.Attendance.model.Student;
+import com.psbd.Attendance.persistance.mapper.StudentRowMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +13,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -22,6 +27,11 @@ public class JdbcStudentRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private SimpleJdbcCall simpleJdbcCall;
+    private SimpleJdbcCall simpleJdbcCallGetAllStudentsByGroup;
+
+    @Autowired
+    private StudentRowMapper studentRowMapper;
+
 
     // init SimpleJdbcCall
     @PostConstruct
@@ -32,6 +42,9 @@ public class JdbcStudentRepository {
         simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_students")
                 .withProcedureName("add_student");
+        simpleJdbcCallGetAllStudentsByGroup=new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("pack_students")
+                .withProcedureName("get_all_students_by_group").returningResultSet("out_lists",studentRowMapper);
     }
     @Autowired
     public JdbcStudentRepository(JdbcTemplate jdbcTemplate,
@@ -62,6 +75,15 @@ public class JdbcStudentRepository {
                 .addValue("v_group_name", student.getGroup().getName());
         Map<String, Object> out = simpleJdbcCall.execute(in);
         return student;
+    }
+
+    public Optional<List<Student>> findAllByGroup(Long idGroup)
+    {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("v_id_group", idGroup);
+        Map out=  simpleJdbcCallGetAllStudentsByGroup.execute(in);
+        ArrayList<Student> students = (ArrayList<Student>) out.get("out_lists");
+        return Optional.of(students);
     }
 
 }

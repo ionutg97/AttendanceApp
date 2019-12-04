@@ -36,4 +36,10 @@ public class GroupService {
                 .sorted()
                 .collect(Collectors.toList());
     }
+
+    public Group findById(Long id)
+    {
+        return jdbcGroupRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException((Group.class.getSimpleName()),id));
+    }
 }

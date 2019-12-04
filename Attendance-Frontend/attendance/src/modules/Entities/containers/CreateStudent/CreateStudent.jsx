@@ -143,7 +143,8 @@ export class CreateStudent extends React.Component {
           error={null}
           label="Group"
           onBlur={this.onChangeGroup}
-          items={this.props.groupsList}>
+          items={this.props.groupsList}
+          height={"2.5rem"}>
         </TextSelect>
         <ButtonContainer>
           <Button

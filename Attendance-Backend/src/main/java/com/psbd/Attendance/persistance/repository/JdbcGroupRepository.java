@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Repository
@@ -23,6 +24,8 @@ public class JdbcGroupRepository {
 
     private SimpleJdbcCall simpleJdbcCall;
     private SimpleJdbcCall simpleJdbcFunctionGetAll;
+    private SimpleJdbcCall simpleJdbcProcGetGroup;
+    private SimpleJdbcCall getGroupById;
 
     @Autowired
     GroupRowMapper  groupRowMapper;
@@ -38,7 +41,16 @@ public class JdbcGroupRepository {
 
         simpleJdbcFunctionGetAll = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_groups")
-                .withFunctionName("get_allGroups").returningResultSet("out_groups",groupRowMapper);;
+                .withFunctionName("get_allGroups").returningResultSet("out_groups",groupRowMapper);
+
+        simpleJdbcProcGetGroup = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("pack_groups")
+                .withProcedureName("get_group");
+
+        getGroupById=new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("pack_groups")
+                .withProcedureName("get_groupById");
+
     }
     @Autowired
     public JdbcGroupRepository(JdbcTemplate jdbcTemplate,
@@ -69,9 +81,13 @@ public class JdbcGroupRepository {
         return group;
     }
 
-    public Group findByName(String name)
+    public Optional<Group> findByName(String name)
     {
-        return null;
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("v_name", name);
+        Map out = simpleJdbcProcGetGroup.execute(in);
+        BigDecimal bigDecimalResult = (BigDecimal) out.get("out_id");
+        return  Optional.of(new Group(bigDecimalResult.longValue(),name));
     }
 
     public Optional<List<Group>> findAll(){
@@ -80,5 +96,19 @@ public class JdbcGroupRepository {
         Map out=  simpleJdbcFunctionGetAll.execute();
         ArrayList<Group> arrayGroups = (ArrayList<Group>) out.get("out_groups");
         return Optional.of(arrayGroups);
+    }
+
+    public Optional<Group> findById(Long id){
+        log.info("Repository get Group by Id {}",id);
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("v_id", id);
+        Map out= getGroupById.execute(in);
+
+        Group group = new Group();
+        if(!out.isEmpty()) {
+            group.setId(id);
+            group.setName((String) out.get("out_name_group"));
+        }
+            return Optional.of(group);
     }
 }
