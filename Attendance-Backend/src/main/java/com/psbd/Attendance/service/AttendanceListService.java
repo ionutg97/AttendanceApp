@@ -44,15 +44,20 @@ public class AttendanceListService {
         return attendanceListResult;
     }
 
-    public List<String> getAllListsByWeekAndType(Integer week, String type)
+    public List<AttendanceList> getAllListsByWeekAndType(Integer week, String type)
     {
         List<AttendanceList> attendanceLists=jdbcAttendanceListRepository.getAllListsByWeekAndType(week,type)
             .orElseThrow(() -> new ResourceNotFoundException(AttendanceList.class.getSimpleName()));
 
         return attendanceLists.stream()
                 .sorted(Comparator.comparingInt(AttendanceList::getWeek))
-                .map(lists -> lists.getName())
                 .collect(Collectors.toList());
+    }
+
+    public AttendanceList findById(Long id)
+    {
+        return jdbcAttendanceListRepository.findByIdJquery(id)
+                .orElseThrow(() -> new ResourceNotFoundException(AttendanceList.class.getSimpleName(),id));
     }
 
     public List<String> getAllGroupsByNameAttendanceList(String name,Integer week, String type){

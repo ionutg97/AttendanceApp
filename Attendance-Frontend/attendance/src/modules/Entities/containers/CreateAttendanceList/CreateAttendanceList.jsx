@@ -19,7 +19,7 @@ export class CreateAttendanceList extends React.Component {
                 name: "",
                 week: ""    
             },
-            type: "",
+            type: "seminary",
             groups: [],
             backgroundSaveBtn: "#FF8F74"
         }
@@ -166,7 +166,7 @@ export class CreateAttendanceList extends React.Component {
                     onChange={this.onChangeType}
                     value={this.state.type}
                     items={["seminary","cours","laboratory"]}
-                    height="3rem">
+                    height="2.5rem">
                 </TextSelect>
                 <TextSelect
                     label="Group(s)"

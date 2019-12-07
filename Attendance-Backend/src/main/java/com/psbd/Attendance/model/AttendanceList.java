@@ -12,4 +12,7 @@ public class AttendanceList {
     private String name;
     private Category category;
     private Integer week;
+
 }
+
+

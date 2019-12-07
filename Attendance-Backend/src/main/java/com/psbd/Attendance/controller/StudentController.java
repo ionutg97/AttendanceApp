@@ -1,5 +1,7 @@
 package com.psbd.Attendance.controller;
 
+import com.psbd.Attendance.dto.LoginDto;
+import com.psbd.Attendance.model.AttendanceItem;
 import com.psbd.Attendance.model.Student;
 import com.psbd.Attendance.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,18 +23,20 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+
     @PostMapping
-    public ResponseEntity<Student> saveNewTeacher(@RequestBody Student student) {
+    public ResponseEntity<Student> saveNewStudent(@RequestBody Student student) {
         Student studentResult = studentService.save(student);
         return new ResponseEntity<>(studentResult, HttpStatus.CREATED);
     }
 
+
     @GetMapping("/login")
-    public ResponseEntity<String>login (@RequestParam String username ,@RequestParam String password){
+    public ResponseEntity<LoginDto>login (@RequestParam String username , @RequestParam String password){
         log.info("GET request for login");
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE);
-        String resultLogin = studentService.login(username,password);
+        responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        LoginDto resultLogin = studentService.login(username,password);
         return new ResponseEntity<>(resultLogin,responseHeaders,HttpStatus.OK);
     }
 

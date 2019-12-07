@@ -1,5 +1,6 @@
 package com.psbd.Attendance.service;
 
+import com.psbd.Attendance.dto.LoginDto;
 import com.psbd.Attendance.exception.ResourceNotFoundException;
 import com.psbd.Attendance.model.Group;
 import com.psbd.Attendance.model.GroupRef;
@@ -41,7 +42,11 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
-    public String login (String name, String password)
+    public Boolean findStudentOnAttendance(Long idAttendance, Student student){
+        return jdbcStudentRepository.findStudentOnAttendance(idAttendance,student);
+    }
+
+    public LoginDto login (String name, String password)
     {
         String studentName="user";
         String studentPassword="04F8996DA763B7A969B1028EE3007569EAF3A635486DDAB211D512C85B9DF8FB";
@@ -50,11 +55,11 @@ public class StudentService {
         String teacherPassword="8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918";
 
         if(name.equals(studentName) && password.toUpperCase().equals(studentPassword))
-            return new String("user");
+            return new LoginDto("user");
         else
             if(name.equals(teacherName) && password.toUpperCase().equals(teacherPassword))
-                return new String("admin");
+                return new LoginDto("admin");
             else
-                return new String("login fail");
+                return new LoginDto("login fail");
     }
 }

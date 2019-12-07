@@ -1,58 +1,32 @@
 package com.psbd.Attendance.persistance.mapper;
 
+import com.psbd.Attendance.model.AttendanceItem;
+import com.psbd.Attendance.model.Student;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Slf4j
 @Service
-public class AttendanceItemRowMapper {//implements RowMapper<AttendanceItem> {
+public class AttendanceItemRowMapper implements RowMapper<AttendanceItem> {
+    @Override
+    public AttendanceItem mapRow(ResultSet resultSet, int i) throws SQLException {
+        AttendanceItem attendanceItem=new AttendanceItem();
 
-//    private JdbcClassroomRepository classroomRepository;
-//    private JdbcTeacherRepository jdbcTeacherRepository;
-//    private JdbcAttendanceListRepository jdbcAttendanceListRepository;
-//    private JdbcStudentRepository jdbcStudentRepository;
-//
-//    @Autowired
-//    public AttendanceItemRowMapper(JdbcClassroomRepository classroomRepository,
-//                                   JdbcTeacherRepository jdbcTeacherRepository,
-//                                   JdbcAttendanceListRepository jdbcAttendanceListRepository,
-//                                   JdbcStudentRepository jdbcStudentRepository) {
-//        this.classroomRepository = classroomRepository;
-//        this.jdbcTeacherRepository = jdbcTeacherRepository;
-//        this.jdbcAttendanceListRepository = jdbcAttendanceListRepository;
-//        this.jdbcStudentRepository = jdbcStudentRepository;
-//    }
-//
-//    @Override
-//    public AttendanceItem mapRow(ResultSet resultSet, int i) throws SQLException {
-//
-//        //log.info("Mapping resultSet to feedback and fetching the user that sent the feedback");
-//        Long fromAttendanceListId = resultSet.getLong("id_attendance_list");
-//        Long fromTeacherId = resultSet.getLong("id_teacher");
-//        Long fromClassroomId = resultSet.getLong("id_classroom");
-//
-//
-//        Teacher teacher = jdbcTeacherRepository
-//                .findById(fromTeacherId)
-//                .orElseThrow(() -> new ResourceNotFoundException(Teacher.class.getSimpleName(), fromTeacherId));
-//
-//        Classroom classroom = classroomRepository
-//                .findById(fromClassroomId)
-//                .orElseThrow(() -> new ResourceNotFoundException(Classroom.class.getSimpleName(), fromClassroomId));
-//
-//        AttendanceList attendanceList = jdbcAttendanceListRepository
-//                .findById(fromAttendanceListId)
-//                .orElseThrow(() -> new ResourceNotFoundException(AttendanceList.class.getSimpleName(), fromAttendanceListId));
-//
-//
-//        AttendanceItem attendanceItem = new AttendanceItem();
-//        attendanceItem.setId(resultSet.getLong("id_attendance"));
-//        attendanceItem.setClassroom(classroom);
-//        attendanceItem.setTeacher(teacher);
-//        attendanceItem.setAttendanceList(attendanceList);
-//        attendanceItem.setGrade(resultSet.getInt("grade"));
-//        attendanceItem.setDetails(resultSet.getString("detail"));
-//        return attendanceItem;
-//
-//    }
+
+        Integer idStudent= resultSet.getInt("id_student");
+        Integer grade = resultSet.getInt("grade");
+        String detail =resultSet.getString("detail");
+Student student=new Student((long)idStudent,null,null,null);
+
+        attendanceItem.addStudent(student);
+        attendanceItem.setGrade(grade);
+        attendanceItem.setDetails(detail);
+
+        return attendanceItem;
+    }
 }

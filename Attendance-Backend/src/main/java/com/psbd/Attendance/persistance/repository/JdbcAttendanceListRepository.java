@@ -84,6 +84,21 @@ public class JdbcAttendanceListRepository {
         return attendanceList;
     }
 
+    public Optional<AttendanceList> findByIdJquery(Long fromAttendanceListId) {
+        log.info("Retrieving attendance list with id {} ", fromAttendanceListId);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(AttendanceListQueries.FIND_BY_ID,
+                    new Object[]{fromAttendanceListId}, (rs, rowNum) ->
+                            new AttendanceList(
+                                    rs.getLong("id_attendance_list"),
+                                    rs.getString("name_attendance"),
+                                    Category.getInstance(rs.getString("type")),
+                                    rs.getInt("week"))));
+        } catch (IncorrectResultSizeDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
     // Procedure created in Data base
     public AttendanceList saveProcedureWay(AttendanceList attendanceList){
         log.info("Repository Save new attendance list");
@@ -107,20 +122,7 @@ public class JdbcAttendanceListRepository {
         return groupRef;
     }
 
-    public Optional<AttendanceList> findById(Long fromAttendanceListId) {
-        log.info("Retrieving attendance list with id {} ", fromAttendanceListId);
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(AttendanceListQueries.FIND_BY_ID,
-                    new Object[]{fromAttendanceListId}, (rs, rowNum) ->
-                            new AttendanceList(
-                                    rs.getLong("id_attendance_lits"),
-                                    rs.getString("name_attendance"),
-                                    Category.valueOf(rs.getString("type")),
-                                    rs.getInt("week"))));
-        } catch (IncorrectResultSizeDataAccessException exception) {
-            return Optional.empty();
-        }
-    }
+
 
     public Optional<List<AttendanceList>> getAllListsByWeekAndType(Integer week, String type)
     {

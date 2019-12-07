@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,9 @@ public class JdbcStudentRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private SimpleJdbcCall simpleJdbcCall;
-    private SimpleJdbcCall simpleJdbcCallGetAllStudentsByGroup;
+    private SimpleJdbcCall simpleJdbcCallGetAllStudentsByGroup,
+            simpleJdbcCallGetById,
+            simpleJdbcCallFindStudentOnAttendance;
 
     @Autowired
     private StudentRowMapper studentRowMapper;
@@ -45,6 +48,13 @@ public class JdbcStudentRepository {
         simpleJdbcCallGetAllStudentsByGroup=new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_students")
                 .withProcedureName("get_all_students_by_group").returningResultSet("out_lists",studentRowMapper);
+        simpleJdbcCallGetById=new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("pack_students")
+                .withProcedureName("get_student_by_id").returningResultSet("out_lists",studentRowMapper);
+        simpleJdbcCallFindStudentOnAttendance=new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("pack_students")
+                .withProcedureName("find_student_on_attendance");
+
     }
     @Autowired
     public JdbcStudentRepository(JdbcTemplate jdbcTemplate,
@@ -86,5 +96,25 @@ public class JdbcStudentRepository {
         return Optional.of(students);
     }
 
+    public Optional<Student> findById(Long id)
+    {
+        SqlParameterSource in = new MapSqlParameterSource()
+            .addValue("v_id", id);
+        Map out=  simpleJdbcCallGetById.execute(in);
+        ArrayList<Student> students = (ArrayList<Student>) out.get("out_lists");
+        return Optional.of(students.get(0));
+    }
+
+    public boolean findStudentOnAttendance(Long idAttendance, Student student) {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("v_id_attendance", idAttendance)
+                .addValue("v_identity_number",student.getIdentityNumber());
+        Map out=  simpleJdbcCallFindStudentOnAttendance.execute(in);
+        BigDecimal bigDecimalResult = (BigDecimal) out.get("v_id");
+        if(bigDecimalResult.longValue()>0)
+            return true;
+        else
+            return false;
+    }
 }
 

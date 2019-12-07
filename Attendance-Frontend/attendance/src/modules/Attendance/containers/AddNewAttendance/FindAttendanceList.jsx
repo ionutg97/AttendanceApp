@@ -16,10 +16,10 @@ export class FindAttendaceList extends React.Component {
         this.state = {
             week: "",
             category: "seminary",
+            nameList: "",
             errors: {
                 week: ""
             },
-            nameList: "",
             group: "",
             backgroundSaveBtn: "#FF8F74"
         };
@@ -33,28 +33,8 @@ export class FindAttendaceList extends React.Component {
 
     onChangeWeek = event => this.onChange("week", event.target.value);
     onChangeCategory = event => this.onChange("category", event.target.value);
-    onSelectList = (event) => this.onChange("nameList", event.target.value);
-    onSelectGroup = (event) => this.onChange("group", event.target.value);
-    // onSelectList = (event) =>{
-    //     console.log("event", event);
-    //     return new Promise((resolve,reject)=>
-    //     {
-    //         console.log(this.state);
-
-    //         this.state.nameList=event.target.value;
-    //         console.log(this.state);
-    //         this.state.nameList ?
-    //         resolve():reject()
-    //     });
-    // };
-
-    // onSelectListPromise = new Promise((resolve)=>{
-    //     resolve(valueEvent)
-    // });
-
-    // onSelectListPromise.then()
-
-
+    onSelectList = event => this.onChange("nameList", event.target.value);
+    onSelectGroup = event => this.onChange("group", event.target.value);
 
     verifyInputWeek = () => {
         const { errors, backgroundSaveBtn } = this.state
@@ -91,13 +71,13 @@ export class FindAttendaceList extends React.Component {
             this.props.findStudentsByGroup(this.state.group);
             this.setState({
                 week: "",
-                backgroundSaveBtn: "#FF8F74",
-                nameList: [],
+                category: "seminary",
+                nameList: "",
                 errors: {
-                    ...errors,
                     week: ""
                 },
-                group: ""
+                group: "",
+                backgroundSaveBtn: "#FF8F74"
             });
         }
     }
@@ -107,7 +87,7 @@ export class FindAttendaceList extends React.Component {
     }
 
     findGroupByName = () => {
-
+        console.log(this.state.nameList)
         if (this.state.nameList !== "") {
             this.props.findGroup(this.state.nameList, this.state.week, this.state.category);
         }
@@ -145,15 +125,17 @@ export class FindAttendaceList extends React.Component {
                     error={null}
                     onChange={this.onSelectList}
                     onBlur={this.findGroupByName}
-                    items={this.props.lists}
+                    items={ ["--none--", ...this.props.lists.map(item =>item.name)]}
+                    value={this.state.nameList}
                     height="2.5rem"
                 ></TextSelect>
                 <TextSelect
                     label="Groups"
                     error={null}
-                    items={this.props.groups}
+                    items={["--none--", ...this.props.groups]}
                     onChange={this.onSelectGroup}
                     height="2.5rem"
+                    
                 ></TextSelect>
                 <ButtonContainer>
                     <Button

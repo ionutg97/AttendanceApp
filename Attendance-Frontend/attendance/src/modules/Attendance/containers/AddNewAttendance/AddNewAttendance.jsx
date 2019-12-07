@@ -7,7 +7,7 @@ import Button from '../../../Entities/components/Button';
 import TextInput from '../../../Entities/components/TextInput';
 import TextSelect from '../../../Entities/components/TextSelect';
 
-import { CancelAdd } from '../../actions/Actions';
+import { CancelAdd,addStudentOnAttendance , addStudentDetailsOnAttendance,getStudentsAttendance} from '../../actions/Actions';
 
 export class AddNewAttendance extends React.Component {
     constructor(props) {
@@ -34,15 +34,44 @@ export class AddNewAttendance extends React.Component {
     }
 
     saveGradeAndDetails=()=>{
-            console.log("admin");
+        if(this.state.studentName!=="")
+        {
+            let splitted = this.state.studentName.split(" ");
+            const student ={
+                nameStudent:splitted[0],
+                identityNumberStudent:splitted.pop(),
+                grade:this.state.grade,
+                details:this.state.details
+            } 
+            console.log(this.props.lists,this.props.nameListSelected);
+            let list= this.props.lists.filter(  (item) => {return item.name ===this.props.nameListSelected});
+               this.props.addStudentDetailsOnAttendance(list,student);
+        }  
     }
 
     saveOnAttendance=()=>{
-        console.log("user")
+        if(this.state.studentName!=="")
+        {
+            let splitted = this.state.studentName.split(" "); 
+            const student ={
+                nameStudent:splitted[0],
+                identityNumberStudent:splitted.pop()
+            } 
+           this.props.addStudentOnAttendance(this.props.nameListSelected,student);
+        }
+
+    }
+
+    viewAttendance=()=>{
+      //  console.log(this.props.nameListSelected);
+      //  console.log(this.props.lists);
+        let list= this.props.lists.filter(  (item) => {return item.name ===this.props.nameListSelected});
+        const {id}=list[0];
+      //  console.log("component did mount ",id);
+        this.props.getStudentsAttendance(id);
     }
 
     teacherContainerAddGrades = () => {
-        console.log(this.props.isAdmin)
         if (this.props.isAdmin)
             return (
                 <div>
@@ -90,6 +119,12 @@ export class AddNewAttendance extends React.Component {
                         background="#32CD32">
                         Cancel
                             </Button>
+
+                             <Button
+                        onClick={this.viewAttendance}
+                        background="#32CD32">
+                        View
+                            </Button>
                 </ButtonContainer>
             </div>
         );
@@ -99,13 +134,15 @@ export class AddNewAttendance extends React.Component {
 function mapDispatchToProps(dispatch) {
     return {
         dispatch,
-        ...bindActionCreators({ CancelAdd }, dispatch)
+        ...bindActionCreators({ CancelAdd ,addStudentOnAttendance, addStudentDetailsOnAttendance,getStudentsAttendance}, dispatch)
     }
 }
 
 const mapStateToProps = state => ({
     name: state.attendance.attendanceReducer.name,
+    lists: state.attendance.attendanceReducer.attendanceLists,
     students: state.attendance.attendanceReducer.students,
+    nameListSelected:state.attendance.attendanceReducer.nameListSelected,
     isAdmin: state.login.login.isAdmin
 });
 

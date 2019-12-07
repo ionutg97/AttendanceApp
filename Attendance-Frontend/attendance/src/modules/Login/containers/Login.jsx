@@ -98,7 +98,6 @@ export class Login extends React.Component {
    doLogin = () => {
         if (this.state.errors.name === null && this.state.errors.password === null
             && this.state.name !== "" && this.state.password !== "") {
-                // console.log(this.state.name, this.state.password);
             this.props.login(this.state.name, this.state.password);
             this.clearValue();
         }
@@ -106,9 +105,9 @@ export class Login extends React.Component {
     }
 
     clearValue = () => {
-        const { name, discipline, backgroundSaveBtn } = this.state;
+       
         this.setState({
-            discipline: "",
+            password: "",
             name: "",
             backgroundSaveBtn: "#FF8F74"
         });
