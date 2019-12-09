@@ -45,7 +45,7 @@ export class AddNewAttendance extends React.Component {
             } 
             console.log(this.props.lists,this.props.nameListSelected);
             let list= this.props.lists.filter(  (item) => {return item.name ===this.props.nameListSelected});
-               this.props.addStudentDetailsOnAttendance(list,student);
+               this.props.addStudentDetailsOnAttendance(list,student,this.props.groupSelected);
         }  
     }
 
@@ -100,7 +100,7 @@ export class AddNewAttendance extends React.Component {
                     label="Student"
                     error={null}
                     onChange={this.onStudentNameChange}
-                    items={this.props.students}
+                    items={["--none--", "all",...this.props.students]}
                     //onChange={this.onSelectGroup}
                     height="2.5rem"
                 ></TextSelect>
@@ -143,6 +143,7 @@ const mapStateToProps = state => ({
     lists: state.attendance.attendanceReducer.attendanceLists,
     students: state.attendance.attendanceReducer.students,
     nameListSelected:state.attendance.attendanceReducer.nameListSelected,
+    groupSelected:state.attendance.attendanceReducer.groupSelected,
     isAdmin: state.login.login.isAdmin
 });
 

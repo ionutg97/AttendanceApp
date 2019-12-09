@@ -12,14 +12,14 @@ import java.sql.SQLException;
 public class AttedanceListRowMapper implements RowMapper<AttendanceList> {
     @Override
     public AttendanceList mapRow(ResultSet resultSet, int i) throws SQLException {
-        AttendanceList attendanceList=new AttendanceList();
+        AttendanceList attendanceList = new AttendanceList();
 
         Integer idList = resultSet.getInt("id_attendance_list");
         String nameList = resultSet.getString("name_attendance");
-        Integer week =resultSet.getInt("week");
-        String type =resultSet.getString("type");
+        Integer week = resultSet.getInt("week");
+        String type = resultSet.getString("type");
 
-        attendanceList.setId((long)idList);
+        attendanceList.setId((long) idList);
         attendanceList.setName(nameList);
         attendanceList.setWeek(week);
         attendanceList.setCategory(Category.getInstance(type));

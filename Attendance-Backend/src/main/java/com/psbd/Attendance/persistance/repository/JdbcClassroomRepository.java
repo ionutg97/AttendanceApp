@@ -25,8 +25,15 @@ public class JdbcClassroomRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private KeyHolder keyHolder=new GeneratedKeyHolder();
+    private KeyHolder keyHolder = new GeneratedKeyHolder();
     private SimpleJdbcCall simpleJdbcCall;
+
+    @Autowired
+    public JdbcClassroomRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+
+    }
 
     @PostConstruct
     void init() {
@@ -35,12 +42,6 @@ public class JdbcClassroomRepository {
         simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_classrooms")
                 .withProcedureName("add_classroom");
-    }
-    @Autowired
-    public JdbcClassroomRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-
     }
 
     public Optional<Classroom> findById(Long fromClassroomId) {

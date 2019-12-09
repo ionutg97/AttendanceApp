@@ -25,11 +25,10 @@ public class GroupService {
         return jdbcGroupRepository.save(group);
     }
 
-    public List<String> findAll()
-    {
-        List<Group> groups=jdbcGroupRepository
+    public List<String> findAll() {
+        List<Group> groups = jdbcGroupRepository
                 .findAll()
-               .orElseThrow(() -> new ResourceNotFoundException(Group.class.getSimpleName()));
+                .orElseThrow(() -> new ResourceNotFoundException(Group.class.getSimpleName()));
 
         return groups.stream()
                 .map(group -> group.getName().toUpperCase())
@@ -37,9 +36,8 @@ public class GroupService {
                 .collect(Collectors.toList());
     }
 
-    public Group findById(Long id)
-    {
+    public Group findById(Long id) {
         return jdbcGroupRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException((Group.class.getSimpleName()),id));
+                .orElseThrow(() -> new ResourceNotFoundException((Group.class.getSimpleName()), id));
     }
 }

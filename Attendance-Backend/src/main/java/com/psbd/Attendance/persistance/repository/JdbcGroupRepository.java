@@ -21,14 +21,20 @@ public class JdbcGroupRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
+    @Autowired
+    GroupRowMapper groupRowMapper;
     private SimpleJdbcCall simpleJdbcCall;
     private SimpleJdbcCall simpleJdbcFunctionGetAll;
     private SimpleJdbcCall simpleJdbcProcGetGroup;
     private SimpleJdbcCall getGroupById;
 
     @Autowired
-    GroupRowMapper  groupRowMapper;
+    public JdbcGroupRepository(JdbcTemplate jdbcTemplate,
+                               NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
     // init SimpleJdbcCall
     @PostConstruct
     void init() {
@@ -41,22 +47,16 @@ public class JdbcGroupRepository {
 
         simpleJdbcFunctionGetAll = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_groups")
-                .withFunctionName("get_allGroups").returningResultSet("out_groups",groupRowMapper);
+                .withFunctionName("get_allGroups").returningResultSet("out_groups", groupRowMapper);
 
         simpleJdbcProcGetGroup = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_groups")
                 .withProcedureName("get_group");
 
-        getGroupById=new SimpleJdbcCall(jdbcTemplate)
+        getGroupById = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_groups")
                 .withProcedureName("get_groupById");
 
-    }
-    @Autowired
-    public JdbcGroupRepository(JdbcTemplate jdbcTemplate,
-                                 NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     //Save new Student throught jquery
@@ -81,34 +81,33 @@ public class JdbcGroupRepository {
         return group;
     }
 
-    public Optional<Group> findByName(String name)
-    {
+    public Optional<Group> findByName(String name) {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_name", name);
         Map out = simpleJdbcProcGetGroup.execute(in);
         BigDecimal bigDecimalResult = (BigDecimal) out.get("out_id");
-        return  Optional.of(new Group(bigDecimalResult.longValue(),name));
+        return Optional.of(new Group(bigDecimalResult.longValue(), name));
     }
 
-    public Optional<List<Group>> findAll(){
+    public Optional<List<Group>> findAll() {
         log.info("get all Groups");
-        Set<Group> groups=new TreeSet<Group>();
-        Map out=  simpleJdbcFunctionGetAll.execute();
+        Set<Group> groups = new TreeSet<Group>();
+        Map out = simpleJdbcFunctionGetAll.execute();
         ArrayList<Group> arrayGroups = (ArrayList<Group>) out.get("out_groups");
         return Optional.of(arrayGroups);
     }
 
-    public Optional<Group> findById(Long id){
-        log.info("Repository get Group by Id {}",id);
+    public Optional<Group> findById(Long id) {
+        log.info("Repository get Group by Id {}", id);
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_id", id);
-        Map out= getGroupById.execute(in);
+        Map out = getGroupById.execute(in);
 
         Group group = new Group();
-        if(!out.isEmpty()) {
+        if (!out.isEmpty()) {
             group.setId(id);
             group.setName((String) out.get("out_name_group"));
         }
-            return Optional.of(group);
+        return Optional.of(group);
     }
 }

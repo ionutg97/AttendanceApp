@@ -1,8 +1,6 @@
 package com.psbd.Attendance.persistance.repository;
 
 import com.psbd.Attendance.model.AttendanceItem;
-import com.psbd.Attendance.model.Student;
-import com.psbd.Attendance.persistance.mapper.AttedanceListRowMapper;
 import com.psbd.Attendance.persistance.mapper.AttendanceItemRowMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +9,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +23,12 @@ public class JdbcAttendanceItemRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    private SimpleJdbcCall simpleJdbcCall,simpleJdbcCallUpdate,simpleJdbcCallGetAllById;
-
     @Autowired
     AttendanceItemRowMapper attendanceItemRowMapper;
+    private SimpleJdbcCall simpleJdbcCall,
+            simpleJdbcCallUpdate,
+            simpleJdbcCallGetAllById,
+            simpleJdbcCallAddAllStudents;
 
     @Autowired
     public JdbcAttendanceItemRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -49,48 +45,65 @@ public class JdbcAttendanceItemRepository {
         simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_attendances_students")
                 .withProcedureName("add_attendances_students");
-        simpleJdbcCallUpdate=new SimpleJdbcCall(jdbcTemplate)
+        simpleJdbcCallUpdate = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_attendances_students")
                 .withProcedureName("update_attendances_students");
-        simpleJdbcCallGetAllById=new SimpleJdbcCall(jdbcTemplate)
+        simpleJdbcCallGetAllById = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_attendances_students")
-                .withProcedureName("get_attendances_studentss").returningResultSet("out_lists",attendanceItemRowMapper);
+                .withProcedureName("get_attendances_studentss").returningResultSet("out_lists", attendanceItemRowMapper);
+
+        simpleJdbcCallAddAllStudents = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("pack_attendances_students")
+                .withProcedureName("add_student_all_parameter_trig");
     }
 
 
     // Procedure created in Data base
-    public AttendanceItem saveOneStudent(AttendanceItem attendanceItem){
+    public AttendanceItem saveOneStudent(AttendanceItem attendanceItem) {
         log.info("Repository Save new attendance student");
-        String nameAttedance=attendanceItem.getAttendanceList().getName();
-            SqlParameterSource in = new MapSqlParameterSource()
-                    .addValue("v_identity_number", attendanceItem.getStudents().get(0).getIdentityNumber())
-                    .addValue("v_attendance_list_name",nameAttedance )
-                    .addValue("v_grade",attendanceItem.getGrade())
-                    .addValue("v_detail",attendanceItem.getDetails());
-            Map out = simpleJdbcCall.execute(in);
+        String nameAttedance = attendanceItem.getAttendanceList().getName();
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("v_identity_number", attendanceItem.getStudents().get(0).getIdentityNumber())
+                .addValue("v_attendance_list_name", nameAttedance)
+                .addValue("v_grade", attendanceItem.getGrade())
+                .addValue("v_detail", attendanceItem.getDetails());
+        Map out = simpleJdbcCall.execute(in);
         return attendanceItem;
     }
 
 
     public Optional<AttendanceItem> update(AttendanceItem attendanceItem) {
         log.info("Repository update Student from Attendance Item repository");
-        Long idAttedanceList=attendanceItem.getAttendanceList().getId();
+        Long idAttedanceList = attendanceItem.getAttendanceList().getId();
         SqlParameterSource in = new MapSqlParameterSource()
-                .addValue("v_attendance_list_id",idAttedanceList)
+                .addValue("v_attendance_list_id", idAttedanceList)
                 .addValue("v_identity_number", attendanceItem.getStudents().get(0).getIdentityNumber())
-                .addValue("v_grade",attendanceItem.getGrade())
-                .addValue("v_detail",attendanceItem.getDetails());
+                .addValue("v_grade", attendanceItem.getGrade())
+                .addValue("v_detail", attendanceItem.getDetails());
 
         Map out = simpleJdbcCallUpdate.execute(in);
         return Optional.of(attendanceItem);
     }
 
-    public Optional<List<AttendanceItem>> findAllById(Long attendanceId)
-    {
+    public Optional<List<AttendanceItem>> findAllById(Long attendanceId) {
         SqlParameterSource in = new MapSqlParameterSource()
-                .addValue("v_id_attendance_list",attendanceId);
-        Map out=  simpleJdbcCallGetAllById.execute(in);
+                .addValue("v_id_attendance_list", attendanceId);
+        Map out = simpleJdbcCallGetAllById.execute(in);
         ArrayList<AttendanceItem> attendanceItems = (ArrayList<AttendanceItem>) out.get("out_lists");
         return Optional.of(attendanceItems);
+    }
+
+
+    public AttendanceItem saveAllStudentsByGroup(AttendanceItem attendanceItem) {
+
+        Long id = attendanceItem.getAttendanceList().getId();
+        String v_id_attedance = attendanceItem.getStudents().get(0).getGroup().getName();
+
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("v_group_name", v_id_attedance)
+                .addValue("v_id_attendance", id);
+        Map out = simpleJdbcCallAddAllStudents.execute(in);
+        return attendanceItem;
+
     }
 }

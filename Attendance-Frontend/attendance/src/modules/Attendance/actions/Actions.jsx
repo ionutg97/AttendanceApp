@@ -13,6 +13,7 @@ export const findStudentsByGroup = (group) => {
           students: data,
           displayFind: false,
           displayAdd: true,
+          groupSelected: group
         }
       });
 
@@ -138,12 +139,13 @@ export const addStudentOnAttendance = (nameList, student) => {
   };
 }
 
-export const addStudentDetailsOnAttendance = (list, student) => {
+export const addStudentDetailsOnAttendance = (list, student,group) => {
   const { nameStudent, identityNumberStudent, grade, details } = student //destructuring
   const { id, name, cat, type } = list[0];
 
   console.log("here", { ...list[0] })
   console.log(student)
+  console.log(group);
   return dispatch => {
     fetch(`http://localhost:8090/attendance_item/save_student_details`, {
       method: 'put',
@@ -165,7 +167,10 @@ export const addStudentDetailsOnAttendance = (list, student) => {
           id: null,
           name: nameStudent,
           identityNumber: identityNumberStudent,
-          group: null
+          group:{
+            id:null,
+            name:group
+          }
         }],
         grade: grade,
         details: details

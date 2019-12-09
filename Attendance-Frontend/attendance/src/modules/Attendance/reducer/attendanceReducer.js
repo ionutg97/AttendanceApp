@@ -27,7 +27,8 @@ const attendanceReducerLocal = (state = intialiAttendanceState, action) => {
                 students: action.payload.students,
                 displayFind: action.payload.displayFind,
                 displayAdd: action.payload.displayAdd,
-                groups: []
+                groups: [],
+                groupSelected:action.payload.groupSelected
             };
         }
         case "LOAD_LISTS": {

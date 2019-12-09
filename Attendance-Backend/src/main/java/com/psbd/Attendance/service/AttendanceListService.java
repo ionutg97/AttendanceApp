@@ -9,12 +9,10 @@ import com.psbd.Attendance.persistance.repository.JdbcGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -32,11 +30,11 @@ public class AttendanceListService {
     }
 
     public AttendanceList save(AttendanceList attendanceList) {
-        String attendanceName=attendanceList.getName();
-        List<String> groups= this.parseName(attendanceName);
-        AttendanceList attendanceListResult=jdbcAttendanceListRepository.saveProcedureWay(attendanceList);
-        for (String groupName: groups) {
-            Group findGroup=jdbcGroupRepository.findByName(groupName)
+        String attendanceName = attendanceList.getName();
+        List<String> groups = this.parseName(attendanceName);
+        AttendanceList attendanceListResult = jdbcAttendanceListRepository.saveProcedureWay(attendanceList);
+        for (String groupName : groups) {
+            Group findGroup = jdbcGroupRepository.findByName(groupName)
                     .orElseThrow(() -> new ResourceNotFoundException(Group.class.getSimpleName(), groupName));
 
             GroupRef groupRef = jdbcAttendanceListRepository.saveGroupAttendanceList(new GroupRef(findGroup.getId(), attendanceList.getId()));
@@ -44,36 +42,34 @@ public class AttendanceListService {
         return attendanceListResult;
     }
 
-    public List<AttendanceList> getAllListsByWeekAndType(Integer week, String type)
-    {
-        List<AttendanceList> attendanceLists=jdbcAttendanceListRepository.getAllListsByWeekAndType(week,type)
-            .orElseThrow(() -> new ResourceNotFoundException(AttendanceList.class.getSimpleName()));
+    public List<AttendanceList> getAllListsByWeekAndType(Integer week, String type) {
+        List<AttendanceList> attendanceLists = jdbcAttendanceListRepository.getAllListsByWeekAndType(week, type)
+                .orElseThrow(() -> new ResourceNotFoundException(AttendanceList.class.getSimpleName()));
 
         return attendanceLists.stream()
                 .sorted(Comparator.comparingInt(AttendanceList::getWeek))
                 .collect(Collectors.toList());
     }
 
-    public AttendanceList findById(Long id)
-    {
+    public AttendanceList findById(Long id) {
         return jdbcAttendanceListRepository.findByIdJquery(id)
-                .orElseThrow(() -> new ResourceNotFoundException(AttendanceList.class.getSimpleName(),id));
+                .orElseThrow(() -> new ResourceNotFoundException(AttendanceList.class.getSimpleName(), id));
     }
 
-    public List<String> getAllGroupsByNameAttendanceList(String name,Integer week, String type){
-        Long idAttendance=null;
-        List<AttendanceList> attendanceLists=jdbcAttendanceListRepository.getAllListsByWeekAndType(week,type)
+    public List<String> getAllGroupsByNameAttendanceList(String name, Integer week, String type) {
+        Long idAttendance = null;
+        List<AttendanceList> attendanceLists = jdbcAttendanceListRepository.getAllListsByWeekAndType(week, type)
                 .orElseThrow(() -> new ResourceNotFoundException(AttendanceList.class.getSimpleName()));
 
-        for (AttendanceList attendanceList: attendanceLists) {
-            if(attendanceList.getName().equals(name) &&
-                    attendanceList.getWeek()==week &&
+        for (AttendanceList attendanceList : attendanceLists) {
+            if (attendanceList.getName().equals(name) &&
+                    attendanceList.getWeek() == week &&
                     attendanceList.getCategory().toString().equals(type))
 
-                idAttendance=attendanceList.getId();
+                idAttendance = attendanceList.getId();
         }
 
-        List<GroupRef> groupRefs=jdbcAttendanceListRepository.getAllGroupsIdByIdAttendanceList(idAttendance)
+        List<GroupRef> groupRefs = jdbcAttendanceListRepository.getAllGroupsIdByIdAttendanceList(idAttendance)
                 .orElseThrow(() -> new ResourceNotFoundException(GroupRef.class.getSimpleName()));
 
         return groupRefs.stream()
@@ -85,8 +81,7 @@ public class AttendanceListService {
 
     }
 
-    private List<String> parseName(String name)
-    {
+    private List<String> parseName(String name) {
         return Arrays.stream(name.split(" "))
                 .filter(Pattern.compile("[0-9]{4}[A-Z]$").asPredicate())
                 .collect(Collectors.toList());

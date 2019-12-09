@@ -34,7 +34,7 @@ public class GroupController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         List<String> groups = groupService.findAll();
-        return new ResponseEntity<>(groups,responseHeaders,HttpStatus.OK);
+        return new ResponseEntity<>(groups, responseHeaders, HttpStatus.OK);
     }
 
 }

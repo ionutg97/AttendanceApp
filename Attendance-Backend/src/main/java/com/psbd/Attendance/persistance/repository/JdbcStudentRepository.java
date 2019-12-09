@@ -1,6 +1,5 @@
 package com.psbd.Attendance.persistance.repository;
 
-import com.psbd.Attendance.model.Group;
 import com.psbd.Attendance.model.Student;
 import com.psbd.Attendance.persistance.mapper.StudentRowMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +35,13 @@ public class JdbcStudentRepository {
     private StudentRowMapper studentRowMapper;
 
 
+    @Autowired
+    public JdbcStudentRepository(JdbcTemplate jdbcTemplate,
+                                 NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
     // init SimpleJdbcCall
     @PostConstruct
     void init() {
@@ -45,22 +51,16 @@ public class JdbcStudentRepository {
         simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_students")
                 .withProcedureName("add_student");
-        simpleJdbcCallGetAllStudentsByGroup=new SimpleJdbcCall(jdbcTemplate)
+        simpleJdbcCallGetAllStudentsByGroup = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_students")
-                .withProcedureName("get_all_students_by_group").returningResultSet("out_lists",studentRowMapper);
-        simpleJdbcCallGetById=new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName("get_all_students_by_group").returningResultSet("out_lists", studentRowMapper);
+        simpleJdbcCallGetById = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_students")
-                .withProcedureName("get_student_by_id").returningResultSet("out_lists",studentRowMapper);
-        simpleJdbcCallFindStudentOnAttendance=new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName("get_student_by_id").returningResultSet("out_lists", studentRowMapper);
+        simpleJdbcCallFindStudentOnAttendance = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_students")
                 .withProcedureName("find_student_on_attendance");
 
-    }
-    @Autowired
-    public JdbcStudentRepository(JdbcTemplate jdbcTemplate,
-                                 NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     //Save new Student throught jquery
@@ -81,26 +81,24 @@ public class JdbcStudentRepository {
     public Student save(Student student) {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_name", student.getName())
-                .addValue("v_indentity_number",student.getIdentityNumber())
+                .addValue("v_indentity_number", student.getIdentityNumber())
                 .addValue("v_group_name", student.getGroup().getName());
         Map<String, Object> out = simpleJdbcCall.execute(in);
         return student;
     }
 
-    public Optional<List<Student>> findAllByGroup(Long idGroup)
-    {
+    public Optional<List<Student>> findAllByGroup(Long idGroup) {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_id_group", idGroup);
-        Map out=  simpleJdbcCallGetAllStudentsByGroup.execute(in);
+        Map out = simpleJdbcCallGetAllStudentsByGroup.execute(in);
         ArrayList<Student> students = (ArrayList<Student>) out.get("out_lists");
         return Optional.of(students);
     }
 
-    public Optional<Student> findById(Long id)
-    {
+    public Optional<Student> findById(Long id) {
         SqlParameterSource in = new MapSqlParameterSource()
-            .addValue("v_id", id);
-        Map out=  simpleJdbcCallGetById.execute(in);
+                .addValue("v_id", id);
+        Map out = simpleJdbcCallGetById.execute(in);
         ArrayList<Student> students = (ArrayList<Student>) out.get("out_lists");
         return Optional.of(students.get(0));
     }
@@ -108,10 +106,10 @@ public class JdbcStudentRepository {
     public boolean findStudentOnAttendance(Long idAttendance, Student student) {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_id_attendance", idAttendance)
-                .addValue("v_identity_number",student.getIdentityNumber());
-        Map out=  simpleJdbcCallFindStudentOnAttendance.execute(in);
+                .addValue("v_identity_number", student.getIdentityNumber());
+        Map out = simpleJdbcCallFindStudentOnAttendance.execute(in);
         BigDecimal bigDecimalResult = (BigDecimal) out.get("v_id");
-        if(bigDecimalResult.longValue()>0)
+        if (bigDecimalResult.longValue() > 0)
             return true;
         else
             return false;

@@ -12,15 +12,15 @@ import java.sql.SQLException;
 @Service
 public class GroupRefRowMapper implements RowMapper<GroupRef> {
 
-@Override
-public GroupRef mapRow(ResultSet resultSet, int i) throws SQLException {
+    @Override
+    public GroupRef mapRow(ResultSet resultSet, int i) throws SQLException {
 
         Integer idAttendanceList = resultSet.getInt("id_attendance_list");
         Integer idGroup = resultSet.getInt("id_group");
 
-        GroupRef groupRef=new GroupRef();
-        groupRef.setAttendaceListId((long)idAttendanceList);
-        groupRef.setGroupId((long)idGroup);
+        GroupRef groupRef = new GroupRef();
+        groupRef.setAttendaceListId((long) idAttendanceList);
+        groupRef.setGroupId((long) idGroup);
         return groupRef;
-        }
+    }
 }

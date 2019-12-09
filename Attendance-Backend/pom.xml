@@ -45,8 +45,6 @@
         </dependency>
 
 
-
-
         <!-- MySQL JDBC driver -->
         <dependency>
             <groupId>mysql</groupId>

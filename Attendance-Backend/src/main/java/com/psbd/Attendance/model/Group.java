@@ -15,17 +15,15 @@ public class Group {
     private String name;
     //private Set<Student> students = new HashSet<Student>();
 
-    public Group(String name)
-    {
-        this.name=name;
+    public Group(String name) {
+        this.name = name;
     }
 
-    public Group(Long id, String name)
-    {
-        this.id=id;
-        this.name=name;
+    public Group(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
-   // public void addStudent(Student student) {
-     //   this.students.add(student);
+    // public void addStudent(Student student) {
+    //   this.students.add(student);
     //}
 }

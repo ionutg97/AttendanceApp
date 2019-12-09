@@ -3,10 +3,7 @@ package com.psbd.Attendance.model;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 @Builder
@@ -33,7 +30,7 @@ public class AttendanceItem {
 //        this.students.add(new StudentRef(student.getId(), this.getId()));
 //    }
 
-        public void addStudent(Student student) {
+    public void addStudent(Student student) {
         this.students.add(student);
     }
 

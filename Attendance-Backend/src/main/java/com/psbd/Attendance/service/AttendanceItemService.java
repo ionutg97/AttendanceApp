@@ -25,7 +25,7 @@ public class AttendanceItemService {
     private StudentService studentService;
 
     @Autowired
-    private JdbcStudentRepository  jdbcStudentRepository;
+    private JdbcStudentRepository jdbcStudentRepository;
 
     @Autowired
     private AttendanceItemMapper attendanceItemMapper;
@@ -39,10 +39,10 @@ public class AttendanceItemService {
         System.out.println("Constructor AttendanceItemService");
     }
 
-    public AttendanceItem saveNewAttendanceItem(String attendanceName,Student student) {
-        AttendanceList attendanceList=new AttendanceList(null,attendanceName,null,null);
+    public AttendanceItem saveNewAttendanceItem(String attendanceName, Student student) {
+        AttendanceList attendanceList = new AttendanceList(null, attendanceName, null, null);
 
-        AttendanceItem attendanceItem=new AttendanceItem();
+        AttendanceItem attendanceItem = new AttendanceItem();
         attendanceItem.addStudent(student);
         attendanceItem.setDetails("p");
         attendanceItem.setGrade(0);
@@ -50,32 +50,34 @@ public class AttendanceItemService {
         attendanceItem.setClassroom(null);
         attendanceItem.setAttendanceList(attendanceList);
 
-       return attendanceItemRepository.saveOneStudent(attendanceItem);
+        return attendanceItemRepository.saveOneStudent(attendanceItem);
     }
 
     public AttendanceItem updateAttendanceItem(AttendanceItem attendanceItem) {
 
-        attendanceItem = isDetailsNull(attendanceItem);
-        attendanceItem=isGradeNull(attendanceItem);
-        //if students exists
-        if(studentService.findStudentOnAttendance(attendanceItem.getAttendanceList().getId(),attendanceItem.getStudents().get(0)))
-            return this.attendanceItemRepository.update(attendanceItem)
-                    .orElseThrow(() -> new ResourceNotFoundException(AttendanceItem.class.getSimpleName()));
-        else
-            return this.attendanceItemRepository.saveOneStudent(attendanceItem);
+        if (!attendanceItem.getStudents().get(0).getIdentityNumber().equals("all")) {
+            attendanceItem = isDetailsNull(attendanceItem);
+            attendanceItem = isGradeNull(attendanceItem);
+            //if students exists
+            if (studentService.findStudentOnAttendance(attendanceItem.getAttendanceList().getId(), attendanceItem.getStudents().get(0)))
+                return this.attendanceItemRepository.update(attendanceItem)
+                        .orElseThrow(() -> new ResourceNotFoundException(AttendanceItem.class.getSimpleName()));
+            else
+                return this.attendanceItemRepository.saveOneStudent(attendanceItem);
+        } else {
+            return attendanceItemRepository.saveAllStudentsByGroup(attendanceItem);
+        }
     }
 
 
-
     public List<AttendanceItemDto> findAllById(Long attendanceId) {
-        List<AttendanceItem> attendanceItems =this.attendanceItemRepository.findAllById(attendanceId)
+        List<AttendanceItem> attendanceItems = this.attendanceItemRepository.findAllById(attendanceId)
                 .orElseThrow(() -> new ResourceNotFoundException(AttendanceItem.class.getSimpleName()));
 
-        AttendanceList attendanceList=attendanceListService.findById(attendanceId);
-        for (AttendanceItem attendanceItem: attendanceItems)
-        {
-            Student student= jdbcStudentRepository.findById(attendanceItem.getStudents().get(0).getId())
-                    .orElseThrow(() -> new ResourceNotFoundException(JdbcStudentRepository.class.getSimpleName(),attendanceId));
+        AttendanceList attendanceList = attendanceListService.findById(attendanceId);
+        for (AttendanceItem attendanceItem : attendanceItems) {
+            Student student = jdbcStudentRepository.findById(attendanceItem.getStudents().get(0).getId())
+                    .orElseThrow(() -> new ResourceNotFoundException(JdbcStudentRepository.class.getSimpleName(), attendanceId));
             attendanceItem.getStudents().remove(0);
             attendanceItem.addStudent(student);
             attendanceItem.setAttendanceList(attendanceList);
@@ -87,14 +89,14 @@ public class AttendanceItemService {
                 .collect(Collectors.toList());
     }
 
-    private AttendanceItem isGradeNull(AttendanceItem attendanceItem){
-        if(attendanceItem.getGrade()== null )
+    private AttendanceItem isGradeNull(AttendanceItem attendanceItem) {
+        if (attendanceItem.getGrade() == null)
             attendanceItem.setGrade(0);
         return attendanceItem;
     }
 
-    private AttendanceItem isDetailsNull(AttendanceItem attendanceItem){
-        if(attendanceItem.getDetails()==null || attendanceItem.getDetails()=="")
+    private AttendanceItem isDetailsNull(AttendanceItem attendanceItem) {
+        if (attendanceItem.getDetails() == null || attendanceItem.getDetails() == "")
             attendanceItem.setDetails("p");
         return attendanceItem;
 

@@ -31,10 +31,10 @@ public class JdbcAttendanceListRepository {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private KeyHolder keyHolder=new GeneratedKeyHolder();
+    private KeyHolder keyHolder = new GeneratedKeyHolder();
 
     private SimpleJdbcCall simpleJdbcCall;
-    private SimpleJdbcCall saveGroupsAttendanceLists,getAllGroupsAttendanceListsByIdAttendance;
+    private SimpleJdbcCall saveGroupsAttendanceLists, getAllGroupsAttendanceListsByIdAttendance;
     private SimpleJdbcCall getAllListsByWeekAndType;
 
     @Autowired
@@ -57,17 +57,17 @@ public class JdbcAttendanceListRepository {
                 .withCatalogName("pack_attendance_lists")
                 .withProcedureName("add_attendance_list");
 
-        saveGroupsAttendanceLists =new SimpleJdbcCall(jdbcTemplate)
+        saveGroupsAttendanceLists = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_groups_attend_lists")
                 .withProcedureName("add_groups_attend_list");
 
         getAllGroupsAttendanceListsByIdAttendance = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_groups_attend_lists")
-                .withProcedureName("get_groups_attend_list_by_id").returningResultSet("out_lists",groupRefRowMapper);
+                .withProcedureName("get_groups_attend_list_by_id").returningResultSet("out_lists", groupRefRowMapper);
 
-        getAllListsByWeekAndType=new SimpleJdbcCall(jdbcTemplate)
+        getAllListsByWeekAndType = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("pack_attendance_lists")
-                .withProcedureName("get_attendance_lists").returningResultSet("out_lists",attedanceListRowMapper);
+                .withProcedureName("get_attendance_lists").returningResultSet("out_lists", attedanceListRowMapper);
 
     }
 
@@ -100,20 +100,19 @@ public class JdbcAttendanceListRepository {
     }
 
     // Procedure created in Data base
-    public AttendanceList saveProcedureWay(AttendanceList attendanceList){
+    public AttendanceList saveProcedureWay(AttendanceList attendanceList) {
         log.info("Repository Save new attendance list");
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_name", attendanceList.getName())
                 .addValue("v_type", attendanceList.getCategory())
                 .addValue("v_week", attendanceList.getWeek());
         Map out = simpleJdbcCall.execute(in);
-        BigDecimal bigDecimalNumber= (BigDecimal) out.get("v_out_id");
-        attendanceList.setId( bigDecimalNumber.longValue());
+        BigDecimal bigDecimalNumber = (BigDecimal) out.get("v_out_id");
+        attendanceList.setId(bigDecimalNumber.longValue());
         return attendanceList;
     }
 
-    public GroupRef saveGroupAttendanceList(GroupRef groupRef)
-    {
+    public GroupRef saveGroupAttendanceList(GroupRef groupRef) {
         log.info("Repository save new Group Attendance lists value ");
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_id_group", groupRef.getGroupId())
@@ -123,24 +122,21 @@ public class JdbcAttendanceListRepository {
     }
 
 
-
-    public Optional<List<AttendanceList>> getAllListsByWeekAndType(Integer week, String type)
-    {
+    public Optional<List<AttendanceList>> getAllListsByWeekAndType(Integer week, String type) {
         log.info("Repository retrieving attendance lists by week and type ");
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_week", week)
-                .addValue("v_type",type);
-        Map out=  getAllListsByWeekAndType.execute(in);
+                .addValue("v_type", type);
+        Map out = getAllListsByWeekAndType.execute(in);
         ArrayList<AttendanceList> attendanceLists = (ArrayList<AttendanceList>) out.get("out_lists");
         return Optional.of(attendanceLists);
     }
 
-    public Optional<List<GroupRef>> getAllGroupsIdByIdAttendanceList(Long idAttedanceList)
-    {
+    public Optional<List<GroupRef>> getAllGroupsIdByIdAttendanceList(Long idAttedanceList) {
         log.info("Repository retrieving all groups which are on one list of attendance ");
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("v_id", idAttedanceList);
-        Map out=  getAllGroupsAttendanceListsByIdAttendance.execute(in);
+        Map out = getAllGroupsAttendanceListsByIdAttendance.execute(in);
         ArrayList<GroupRef> groupRefs = (ArrayList<GroupRef>) out.get("out_lists");
         return Optional.of(groupRefs);
     }

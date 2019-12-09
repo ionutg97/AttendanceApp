@@ -29,16 +29,16 @@ public class AttendanceController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AttendanceList>> getAllList(@RequestParam Integer week, @RequestParam String type){
+    public ResponseEntity<List<AttendanceList>> getAllList(@RequestParam Integer week, @RequestParam String type) {
         log.info("GET request for all attendance lists ");
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-        List<AttendanceList> lists = attendanceListService.getAllListsByWeekAndType(week,type);
-        return new ResponseEntity<>(lists,responseHeaders,HttpStatus.OK);
+        List<AttendanceList> lists = attendanceListService.getAllListsByWeekAndType(week, type);
+        return new ResponseEntity<>(lists, responseHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/groups")
-    public ResponseEntity<List<String>> getAllList(@RequestParam String name,@RequestParam Integer week,@RequestParam String type) {
+    public ResponseEntity<List<String>> getAllList(@RequestParam String name, @RequestParam Integer week, @RequestParam String type) {
         log.info("GET request for all groups by attendance list name ");
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
