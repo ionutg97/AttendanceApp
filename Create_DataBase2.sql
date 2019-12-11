@@ -26,23 +26,10 @@ CREATE TABLE attendance_lists (
     name_attendance      VARCHAR2(250),
     type                 VARCHAR2(20)
 );
-   
 
 ALTER TABLE attendance_lists ADD CONSTRAINT attendance_lists_pk PRIMARY KEY ( id_attendance_list );
 
-ALTER TABLE attendance_lists
-DROP CONSTRAINT attendance_lists_pk;
 
-ALTER TABLE attendance_lists
-DROP CONSTRAINT SYS_C007205;
-
-ALTER TABLE attendance_lists
-   DROP COLUMN id_attendance_list;
-   
-ALTER TABLE attendance_lists
-   ADD id_attendance_list number(7) not null; 
-
---//////////////////////////////  
 CREATE TABLE attendances (
     id_attendace         INTEGER NOT NULL,
     grade                INTEGER,
@@ -51,6 +38,8 @@ CREATE TABLE attendances (
     id_teacher           INTEGER NOT NULL,
     id_attendance_list   INTEGER NOT NULL
 );
+
+
 
 ALTER TABLE attendances
     ADD CONSTRAINT grades_ck CHECK ( grade BETWEEN 2 AND 10 );
@@ -62,6 +51,8 @@ CREATE TABLE attends_students (
     id_attendace   INTEGER NOT NULL,
     id_student     INTEGER NOT NULL
 );
+
+ALTER TABLE attends_students add CONSTRAINT id_attend_student_unique UNIQUE (id_attendace, id_student);
 
 ALTER TABLE attends_students ADD CONSTRAINT attends_students_pk PRIMARY KEY ( id );
 
@@ -78,6 +69,8 @@ CREATE TABLE groups (
 );
 
 ALTER TABLE groups ADD CONSTRAINT classrooms_pkv1 PRIMARY KEY ( id_group );
+ALTER TABLE groups ADD CONSTRAINT unique_name_group UNIQUE (name_group);
+
 
 CREATE TABLE groups_attend_lists (
     id                   INTEGER NOT NULL,
@@ -138,34 +131,13 @@ ALTER TABLE attendances
     ADD CONSTRAINT teachers_attendances FOREIGN KEY ( id_teacher )
         REFERENCES teachers ( id_teacher );
 
-ALTER TABLE attendances
-   DROP COLUMN grade;
-   
-ALTER TABLE attendances
-   DROP COLUMN detail;
-   
-ALTER TABLE attends_students
-   ADD grade INTEGER;
-   
-ALTER TABLE attends_students
-   ADD detail varchar(250);
-   
-
-CREATE SEQUENCE attendance_lists_id_attend_seq START WITH 30000 NOCACHE ORDER;
+CREATE SEQUENCE attendance_lists_id_attendance START WITH 30000 NOCACHE ORDER;
 
 CREATE SEQUENCE attendances_id_attendace_seq START WITH 2000 NOCACHE ORDER;
 
-CREATE  SEQUENCE classrooms_id_classroom_seq START WITH 300 NOCACHE ORDER;
+CREATE SEQUENCE classrooms_id_classroom_seq START WITH 200 NOCACHE ORDER;
 
 CREATE SEQUENCE groups_id_group_seq START WITH 100 NOCACHE ORDER;
-
-CREATE SEQUENCE students_id_student_seq START WITH 1000 NOCACHE ORDER;
-
-CREATE SEQUENCE techers_id_teacher_seq START WITH 200 NOCACHE ORDER;
-
-CREATE SEQUENCE attends_students_id_seq START WITH 10000 NOCACHE ORDER;
-
-CREATE SEQUENCE groups_attend_lists_id_seq START WITH 20000 NOCACHE ORDER;
 
 CREATE OR REPLACE TRIGGER groups_id_group_trg BEFORE
     INSERT ON groups
@@ -176,6 +148,8 @@ BEGIN
 END;
 /
 
+CREATE SEQUENCE students_id_student_seq START WITH 1000 NOCACHE ORDER;
+
 CREATE OR REPLACE TRIGGER students_id_student_trg BEFORE
     INSERT ON students
     FOR EACH ROW
@@ -185,57 +159,14 @@ BEGIN
 END;
 /
 
+CREATE SEQUENCE techers_id_teacher_seq START WITH 200 NOCACHE ORDER;
+
 CREATE OR REPLACE TRIGGER techers_id_teacher_trg BEFORE
     INSERT ON teachers
     FOR EACH ROW
     WHEN ( new.id_teacher IS NULL )
 BEGIN
     :new.id_teacher := techers_id_teacher_seq.nextval;
-END;
-/
-
-CREATE OR REPLACE TRIGGER classrooms_id_classroom_trg BEFORE
-    INSERT ON classrooms
-    FOR EACH ROW
-    WHEN ( new.id_classroom IS NULL )
-BEGIN
-    :new.id_classroom := classrooms_id_classroom_seq.nextval;
-END;
-/
-
-CREATE OR REPLACE TRIGGER attends_students_id_trg BEFORE
-    INSERT ON attends_students
-    FOR EACH ROW
-    WHEN ( new.id IS NULL )
-BEGIN
-    :new.id := attends_students_id_seq.nextval;
-END;
-/
-
-CREATE OR REPLACE TRIGGER attendances_id_attendace_trg BEFORE
-    INSERT ON attendances
-    FOR EACH ROW
-    WHEN ( new.id_attendace IS NULL )
-BEGIN
-    :new.id_attendace := attendances_id_attendace_seq .nextval;
-END;
-/
-
-CREATE OR REPLACE TRIGGER attend_lists_id_attend_trg BEFORE
-    INSERT ON attendance_lists
-    FOR EACH ROW
-    WHEN ( new.id_attendance_list IS NULL )
-BEGIN
-    :new.id_attendance_list := attendance_lists_id_attend_seq.nextval;
-END;
-/
-
-CREATE OR REPLACE TRIGGER groups_attend_lists_id_trg BEFORE
-    INSERT ON groups_attend_lists
-    FOR EACH ROW
-    WHEN ( new.id IS NULL )
-BEGIN
-    :new.id := groups_attend_lists_id_seq.nextval;
 END;
 /
 
